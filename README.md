@@ -17,6 +17,8 @@ This directory contains everything needed to execute the initial stages of the S
 | `AGENT_INSTRUCTIONS.md` | Task instructions for the AI agent |
 | `project1_analysis_v2.md` | Full project proposal (context for the agent) |
 | `power_analysis.py` | Power analysis script (reference) |
+| `validation/ground_truth.json` | Holdout criteria the pipeline must satisfy (read-only) |
+| `validation/validate.py` | Validation runner — agent runs this at each checkpoint (read-only) |
 
 ## Checkpoints
 
