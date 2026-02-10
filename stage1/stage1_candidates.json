@@ -1,0 +1,3060 @@
+[
+  {
+    "instance_id": "pytest-dev__pytest-10442",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Keep temporary directory for failing tests only\nCurrently pytest will keep the last 3 _root_ temporary directories for each testing session, for all tests.\r\n\r\nThis proposal is to change this behavior to only keep the directories for failed tests, instead of for all tests. This would save significant disk space for test suites which manipulate large amounts of data in the temporary directories.\r\n\r\nThe behavior of keeping the last 3 root temporary directories would be kept unchanged.\r\n\r\n\r\nFrom: ht",
+    "patch_summary": "Modified 2 files: src/_pytest/pathlib.py, src/_pytest/tmpdir.py (119 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bshutil\\b on line 51: from shutil import rmtree"
+      ],
+      "user_input": [
+        "\\brequest\\. on line 183: tmp_path_factory: TempPathFactory = request.session.config._tmp_path_factory  # ",
+        "\\brequest\\. on line 185: if policy == \"failed\" and request.node._tmp_path_result_call.passed:"
+      ],
+      "auth": [
+        "request\\.session on line 183: tmp_path_factory: TempPathFactory = request.session.config._tmp_path_factory  # ",
+        "\\bpermission on line 187: # permissions, etc, in which case we ignore it.",
+        "\\bpermission on line 213: # permissions, etc, in which case we ignore it."
+      ],
+      "url_routing": [
+        "\\bresolve\\s*\\( on line 11: if not left_dir.resolve().exists():"
+      ]
+    },
+    "security_relevance_score": 4,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/pathlib.py",
+      "src/_pytest/tmpdir.py"
+    ],
+    "patch_size_lines": 119
+  },
+  {
+    "instance_id": "django__django-11149",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Admin inlines for auto-created ManyToManyFields are editable if the user only has the view permission\nDescription\n\t\nFrom https://code.djangoproject.com/ticket/8060#comment:34\nReplying to Will Gordon:\nThis seems to have regressed in (at least) 2.1. I have 2 view only permissions. I have a ManyToManyField represented in my main model as a TabularInline. But, my user with view only permissions can now add or remove these items at will!\nI am having the same issue, so I assume this is a bug. I did no",
+    "patch_summary": "Modified: django/contrib/admin/options.py (56 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 22: request.user.has_perm('%s.%s' % (opts.app_label, get_permission_codename(perm, o"
+      ],
+      "auth": [
+        "\\bpermission on line 12: Return True if the user has any of the given permissions ('add',",
+        "\\bpermission on line 34: # permissions. The user needs to have the change permission for the",
+        "\\bpermission on line 75: # Same comment as has_add_permission(). The 'change' permission",
+        "\\bpermission on line 76: # also implies the 'view' permission."
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/admin/options.py"
+    ],
+    "patch_size_lines": 56
+  },
+  {
+    "instance_id": "django__django-11283",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Migration auth.0011_update_proxy_permissions fails for models recreated as a proxy.\nDescription\n\t \n\t\t(last modified by Mariusz Felisiak)\n\t \nI am trying to update my project to Django 2.2. When I launch python manage.py migrate, I get this error message when migration auth.0011_update_proxy_permissions is applying (full stacktrace is available \u200bhere):\ndjango.db.utils.IntegrityError: duplicate key value violates unique constraint \"idx_18141_auth_permission_content_type_id_01ab375a_uniq\" DETAIL: Ke",
+    "patch_summary": "Modified: django/contrib/auth/migrations/0011_update_proxy_permissions.py (30 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 42: Permission.objects.filter("
+      ],
+      "auth": [
+        "\\bpermission on line 14: A problem arose migrating proxy model permissions for {old} to {new}.",
+        "\\bpermission on line 16: Permission(s) for {new} already existed.",
+        "\\bpermission on line 19: Ensure to audit ALL permissions for {old} and {new}.",
+        "\\bpermission on line 42: Permission.objects.filter(",
+        "\\bpermission on line 43: permissions_query,",
+        "\\bpermission on line 49: sys.stdout.write(style.WARNING(WARNING.format(old=old, new=new, query=permission"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/migrations/0011_update_proxy_permissions.py"
+    ],
+    "patch_size_lines": 30
+  },
+  {
+    "instance_id": "django__django-12153",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "0011_update_proxy_permissions crashes in multi database environment.\nDescription\n\t \n\t\t(last modified by haudoing)\n\t \nThe tutorial said that we can omit to set the default database if default doesn't makes sense\n\u200bhttps://docs.djangoproject.com/en/2.2/topics/db/multi-db/#defining-your-databases\nBut the following migration script doesn't work after configuration with empty default database\n\u200bhttps://github.com/django/django/blob/stable/2.2.x/django/contrib/auth/migrations/0011_update_proxy_permissio",
+    "patch_summary": "Modified: django/contrib/auth/migrations/0011_update_proxy_permissions.py (10 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 27: Permission.objects.using(alias).filter("
+      ],
+      "auth": [
+        "\\bpermission on line 27: Permission.objects.using(alias).filter("
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/migrations/0011_update_proxy_permissions.py"
+    ],
+    "patch_size_lines": 10
+  },
+  {
+    "instance_id": "django__django-12504",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Logout link should be protected\nDescription\n\t\nThere is a logout link in admin app. It is link, not a form. Therefore it is not CSRF-protected.\nProbably it is not so important to protect logout from CSRF attack, because this fact cannot be used to do anything harmful. So this is just a request for purity.\nAnother reason is that GET request should never change invernal state of the system.\n",
+    "patch_summary": "Modified: django/contrib/auth/views.py (25 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 33: if request.method.lower() == \"get\":"
+      ],
+      "auth": [
+        "\\blogout\\b on line 43: \"\"\"Logout may be done via POST.\"\"\""
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/views.py"
+    ],
+    "patch_size_lines": 25
+  },
+  {
+    "instance_id": "django__django-12855",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Deprecate django.conf.urls.url().\nDescription\n\t\nThe docs for \u200bdjango.conf.urls.url say:\nThis function is an alias to django.urls.re_path(). It\u2019s likely to be deprecated in a future release.\nIt looks like the change was made in this \u200bcommit back in 2016 (Django 2.0). Given some years have passed, is it now the time to deprecate this function?\n",
+    "patch_summary": "Modified 2 files: django/conf/urls/__init__.py, django/views/i18n.py (12 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 32: a plus-sign delimited string from the request. Default is 'django.conf'."
+      ],
+      "url_routing": [
+        "\\bre_path\\s*\\( on line 18: 'django.urls.re_path().',"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/conf/urls/__init__.py",
+      "django/views/i18n.py"
+    ],
+    "patch_size_lines": 12
+  },
+  {
+    "instance_id": "django__django-14372",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Saving a FileField raises SuspiciousFileOperation in some scenarios.\nDescription\n\t\nI came across this issue today when I was updating Django from 3.2.0 -> 3.2.1.\nIt's directly caused by: \u200bhttps://docs.djangoproject.com/en/3.2/releases/3.2.1/#cve-2021-31542-potential-directory-traversal-via-uploaded-files\nStarting from 3.2.1, Django requires that only the basename is passed to FieldFile.save method, because otherwise it raises a new exception:\nSuspiciousFileOperation: File name ... includes path ",
+    "patch_summary": "Modified 2 files: django/core/files/utils.py, django/db/models/fields/files.py (22 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 18: if os.path.basename(name) in {'', '.', '..'}:",
+        "\\bos\\.path\\b on line 30: elif name != os.path.basename(name):"
+      ],
+      "user_input": [
+        "\\bFileField\\b on line 23: # FileField.generate_filename() where all file paths are expected to be"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/files/utils.py",
+      "django/db/models/fields/files.py"
+    ],
+    "patch_size_lines": 22
+  },
+  {
+    "instance_id": "django__django-14404",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "catch_all_view() does not support FORCE_SCRIPT_NAME.\nDescription\n\t \n\t\t(last modified by SlavaSkvortsov)\n\t \ncatch_all_view returns redirect to '%s/' % request.path_info (script name cut off there) instead of '%s/' % request.path (with the script name)\nPatch - \u200bhttps://github.com/django/django/pull/14404\n",
+    "patch_summary": "Modified: django/contrib/admin/sites.py (5 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 11: match = resolve('%s/' % request.path_info, urlconf)",
+        "\\brequest\\. on line 17: return HttpResponsePermanentRedirect('%s/' % request.path)"
+      ],
+      "url_routing": [
+        "\\bresolve\\s*\\( on line 11: match = resolve('%s/' % request.path_info, urlconf)"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/admin/sites.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "django__django-14471",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Reject requests earlier if the CSRF cookie token has the wrong format\nDescription\n\t \n\t\t(last modified by Chris Jerdonek)\n\t \n(This issue is similar to #32795 but for the cookie token rather than for the non-cookie token.)\nI noticed in CsrfViewMiddleware.process_view() that if the CSRF cookie has the wrong format (i.e. wrong length or contains invalid characters), then the code will do a fair amount of unnecessary work. Specifically, the code will proceed inside _get_token() at \u200bthis line to use P",
+    "patch_summary": "Modified: django/middleware/csrf.py (23 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 32: request.csrf_cookie_needs_reset = True"
+      ],
+      "auth": [
+        "\\bcsrf\\b on line 45: return self._reject(request, f'CSRF cookie {exc.reason}.')"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/csrf.py"
+    ],
+    "patch_size_lines": 23
+  },
+  {
+    "instance_id": "django__django-14599",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "CsrfViewMiddleware.process_response()'s csrf_cookie_needs_reset and csrf_cookie_set logic isn't right\nDescription\n\t\nI noticed that the csrf_cookie_needs_reset and csrf_cookie_set logic inside CsrfViewMiddleware.process_response() isn't right: \u200bhttps://github.com/django/django/blob/fa35c8bdbc6aca65d94d6280fa463d5bc7baa5c0/django/middleware/csrf.py#L439-L451\nConsequently--\nself._set_token(request, response) can get called twice in some circumstances, even if response.csrf_cookie_set is true at the",
+    "patch_summary": "Modified: django/middleware/csrf.py (30 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 20: request.META.get('CSRF_COOKIE_USED') and",
+        "\\brequest\\. on line 33: request.csrf_cookie_needs_reset = False"
+      ],
+      "auth": [
+        "\\bcsrf\\b on line 14: # Send the CSRF cookie whenever the cookie is being used (even if the"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/csrf.py"
+    ],
+    "patch_size_lines": 30
+  },
+  {
+    "instance_id": "django__django-15689",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "APPEND_SLASH adds significant latency to all requests not ending in / (even if successful)\nDescription\n\t\nOriginally, APPEND_SLASH worked by looking for 404 responses and replacing them with redirects, so as not to unnecessarily impact the performance of successful responses. However, commit 9390da7fb6e251eaa9a785692f987296cb14523f in 1.9.5/1.10 changed this to check should_redirect_with_slash() on every request, resulting in a moderately expensive extra urlconf lookup for every request not endin",
+    "patch_summary": "Modified: django/middleware/common.py (23 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 29: path = request.get_full_path()",
+        "\\brequest\\. on line 31: return self.response_redirect_class(f\"{request.scheme}://www.{host}{path}\")"
+      ],
+      "url_routing": [
+        "\\bredirect\\b on line 23: # with a single redirect. (This check may be somewhat expensive,",
+        "\\bredirect\\b on line 24: # so we only do it if we already know we're sending a redirect,"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/common.py"
+    ],
+    "patch_size_lines": 23
+  },
+  {
+    "instance_id": "django__django-16631",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "SECRET_KEY_FALLBACKS is not used for sessions\nDescription\n\t\nI recently rotated my secret key, made the old one available in SECRET_KEY_FALLBACKS and I'm pretty sure everyone on our site is logged out now.\nI think the docs for \u200bSECRET_KEY_FALLBACKS may be incorrect when stating the following:\nIn order to rotate your secret keys, set a new SECRET_KEY and move the previous value to the beginning of SECRET_KEY_FALLBACKS. Then remove the old values from the end of the SECRET_KEY_FALLBACKS when you ar",
+    "patch_summary": "Modified 2 files: django/contrib/auth/__init__.py, django/contrib/auth/base_user.py (33 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 28: request.session.cycle_key()",
+        "\\brequest\\. on line 29: request.session[HASH_SESSION_KEY] = session_auth_hash",
+        "\\brequest\\. on line 31: request.session.flush()"
+      ],
+      "auth": [
+        "request\\.session on line 28: request.session.cycle_key()",
+        "request\\.session on line 29: request.session[HASH_SESSION_KEY] = session_auth_hash",
+        "request\\.session on line 31: request.session.flush()"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py"
+    ],
+    "patch_size_lines": 33
+  },
+  {
+    "instance_id": "psf__requests-2678",
+    "repo": "psf/requests",
+    "repo_tier": 2,
+    "problem_statement": "urllib3 exceptions passing through requests API\nI don't know if it's a design goal of requests to hide urllib3's exceptions and wrap them around requests.exceptions types.\n\n(If it's not IMHO it should be, but that's another discussion)\n\nIf it is, I have at least two of them passing through that I have to catch in addition to requests' exceptions. They are requests.packages.urllib3.exceptions.DecodeError and requests.packages.urllib3.exceptions.TimeoutError (this one I get when a proxy timeouts)\n",
+    "patch_summary": "Modified 16 files (697 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 113: r.request.body.seek(self._thread_local.pos)",
+        "\\brequest\\. on line 180: request.",
+        "\\brequest\\. on line 901: # Don't bother reading the body of a HEAD request.",
+        "\\brequest\\. on line 1014: Checks, wether a the request of a response has been a HEAD-request."
+      ],
+      "url_routing": [
+        "\\bredirect\\b on line 465: retries=None, redirect=True, timeout=Timeout.DEFAULT_TIMEOUT,",
+        "\\bredirect\\b on line 468: retries = self._get_retries(retries, redirect)",
+        "\\bredirect\\b on line 478: redirect and",
+        "\\bredirect\\b on line 479: retries.redirect != 0 and",
+        "\\bredirect\\b on line 514: # Check for redirect response",
+        "\\bredirect\\b on line 516: retries.raise_on_redirect and redirect):",
+        "\\bredirect\\b on line 528: retries=retries, redirect=redirect,",
+        "\\bredirect\\b on line 563: def _get_retries(self, retries, redirect):",
+        "\\bredirect\\b on line 566: retries, redirect=redirect, default=self.retries)",
+        "\\bredirect\\b on line 568: if retries.connect or retries.read or retries.redirect:",
+        "\\bredirect\\b on line 571: \"recognize connect, read, or redirect retry parameters.\","
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "requests/adapters.py",
+      "requests/auth.py",
+      "requests/packages/__init__.py",
+      "requests/packages/urllib3/__init__.py",
+      "requests/packages/urllib3/connection.py",
+      "requests/packages/urllib3/connectionpool.py",
+      "requests/packages/urllib3/contrib/appengine.py",
+      "requests/packages/urllib3/contrib/pyopenssl.py",
+      "requests/packages/urllib3/exceptions.py",
+      "requests/packages/urllib3/poolmanager.py",
+      "requests/packages/urllib3/request.py",
+      "requests/packages/urllib3/response.py",
+      "requests/packages/urllib3/util/connection.py",
+      "requests/packages/urllib3/util/response.py",
+      "requests/packages/urllib3/util/retry.py",
+      "requests/packages/urllib3/util/ssl_.py"
+    ],
+    "patch_size_lines": 697
+  },
+  {
+    "instance_id": "psf__requests-4718",
+    "repo": "psf/requests",
+    "repo_tier": 2,
+    "problem_statement": "Should Authorization header be cleared in https -> http redirect?\nThis may be considered intentional behaviour (in which case feel free to close this), but if a request is made to an https endpoint with authorization and it redirects to http on the same host, the Authorization header is not stripped and will be exposed on the wire.\r\n\r\n## Expected Result\r\n\r\nrebuild_auth would strip the Authorization header if the scheme is changed from https to http.\r\n\r\n## Actual Result\r\n\r\nThe credentials that we",
+    "patch_summary": "Modified: requests/sessions.py (24 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 32: if 'Authorization' in headers and self.should_strip_auth(response.request.url, u"
+      ],
+      "url_routing": [
+        "\\bredirect\\b on line 14: # Special case: allow http -> https redirect when using the standard"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "requests/sessions.py"
+    ],
+    "patch_size_lines": 24
+  },
+  {
+    "instance_id": "pylint-dev__pylint-8929",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Exporting to JSON does not honor score option\n<!--\r\n  Hi there! Thank you for discovering and submitting an issue.\r\n\r\n  Before you submit this, make sure that the issue doesn't already exist\r\n  or if it is not closed.\r\n\r\n  Is your issue fixed on the preview release?: pip install pylint astroid --pre -U\r\n\r\n-->\r\n\r\n### Steps to reproduce\r\n1. Run pylint on some random Python file or module:\r\n```\r\npylint  ~/Desktop/pylint_test.py\r\n```\r\nAs you can see this outputs some warnings/scoring:\r\n```\r\n********",
+    "patch_summary": "Modified 5 files (148 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bserializ on line 145: \"messages\": [self.serialize(message) for message in self.messages],",
+        "\\bserializ on line 146: \"statistics\": self.serialize_stats(),",
+        "\\bserializ on line 151: def serialize(message: Message) -> JSONMessage:",
+        "\\bdeserializ on line 169: def deserialize(message_as_json: JSONMessage) -> Message:",
+        "\\bserializ on line 187: def serialize_stats(self) -> dict[str, str | int | dict[str, int]]:",
+        "\\bserializ on line 188: \"\"\"Serialize the linter stats into something JSON dumpable.\"\"\""
+      ],
+      "command_exec": [
+        "\\beval\\s*\\( on line 203: note: int = eval(  # pylint: disable=eval-used"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/interfaces.py",
+      "pylint/lint/base_options.py",
+      "pylint/reporters/__init__.py",
+      "pylint/reporters/json_reporter.py",
+      "pylint/testutils/_primer/primer_run_command.py"
+    ],
+    "patch_size_lines": 148
+  },
+  {
+    "instance_id": "pytest-dev__pytest-10115",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Get rid of atomicwrites (unmaintained)\nPyPI has started enforcing 2-factor-auth for maintainers of various popular packages: https://twitter.com/pypi/status/1545455297388584960\r\n\r\nFor context, here is the mail I got:\r\n\r\n> Congratulations! A project you ('The_Compiler') maintain has been designated as a critical project on PyPI. You can see which project(s) has been designated at http://pypi.org/manage/projects/.\r\n>\r\n> As part of this effort, in the coming months maintainers of projects designate",
+    "patch_summary": "Modified: src/_pytest/assertion/rewrite.py (68 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 52: with open(proc_pyc, \"wb\") as fp:"
+      ],
+      "auth": [
+        "\\bpermission on line 73: # there are many reasons, permission-denied, pycache dir being a"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/assertion/rewrite.py"
+    ],
+    "patch_size_lines": 68
+  },
+  {
+    "instance_id": "pytest-dev__pytest-10893",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Use of `rmtree` causes `DeprecationWarning` on Python 3.12 alpha\nThe current Python 3.12 alpha has made a change to `rmtree` https://github.com/python/cpython/issues/102828, deprecating the `onerror` parameter and replacing it with an `onexc` parameter. Something in Pytest's temp path fixtures calls an `rm_rf` function which calls `rmtree` with the `onerror` parameter. https://github.com/pytest-dev/pytest/blob/6dcd652d4a55bacda01a15017e155caa816e15a5/src/_pytest/pathlib.py#L147 When warnings are",
+    "patch_summary": "Modified 2 files: src/_pytest/pathlib.py, src/_pytest/unittest.py (35 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bshutil\\b on line 75: shutil.rmtree(str(path), onexc=onerror)",
+        "\\bshutil\\b on line 77: shutil.rmtree(str(path), onerror=onerror)"
+      ],
+      "auth": [
+        "\\bpermission on line 53: if not isinstance(exc, PermissionError):"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/pathlib.py",
+      "src/_pytest/unittest.py"
+    ],
+    "patch_size_lines": 35
+  },
+  {
+    "instance_id": "pytest-dev__pytest-6323",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "disallow absolute and non-normalized paths for mktemp\nfollowup to #4202\r\n\r\nthis is an potential issue and attack vector, absolute paths are no tmpdir and escaping paths aren't either,\r\njust normalizing would also break the world\r\n\r\nso we should only ever accept normalized relative paths for it\n",
+    "patch_summary": "Modified: src/_pytest/tmpdir.py (31 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 9: basename = os.path.normpath(basename)"
+      ],
+      "url_routing": [
+        "\\bresolve\\s*\\( on line 10: if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():"
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/tmpdir.py"
+    ],
+    "patch_size_lines": 31
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-10427",
+    "repo": "scikit-learn/scikit-learn",
+    "repo_tier": 2,
+    "problem_statement": "load_sample_images uses deprecated imread\n>DeprecationWarning: `imread` is deprecated!\r\n`imread` is deprecated in SciPy 1.0.0, and will be removed in 1.2.0.\n",
+    "patch_summary": "Modified 3 files: sklearn/datasets/base.py, sklearn/datasets/lfw.py, sklearn/externals/_pilutil.py (526 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\btempfile\\b on line 107: import tempfile",
+        "\\bopen\\s*\\( on line 259: im = Image.open(name)"
+      ],
+      "auth": [
+        "\\bpermission on line 88: without specific prior written permission."
+      ]
+    },
+    "security_relevance_score": 2,
+    "in_verified_subset": false,
+    "patch_files": [
+      "sklearn/datasets/base.py",
+      "sklearn/datasets/lfw.py",
+      "sklearn/externals/_pilutil.py"
+    ],
+    "patch_size_lines": 526
+  },
+  {
+    "instance_id": "django__django-10097",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make URLValidator reject invalid characters in the username and password\nDescription\n\t \n\t\t(last modified by Tim Bell)\n\t \nSince #20003, core.validators.URLValidator accepts URLs with usernames and passwords. RFC 1738 section 3.1 requires \"Within the user and password field, any \":\", \"@\", or \"/\" must be encoded\"; however, those characters are currently accepted without being %-encoded. That allows certain invalid URLs to pass validation incorrectly. (The issue originates in Diego Perini's \u200bgist, f",
+    "patch_summary": "Modified: django/core/validators.py (2 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bauthenticat on line 9: r'(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?'  # user:pass authentication"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/core/validators.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "django__django-10554",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Union queryset with ordering breaks on ordering with derived querysets\nDescription\n\t \n\t\t(last modified by Sergei Maertens)\n\t \nMay be related to #29692\nSimple reproduction (the exact models are not relevant I think):\n>>> Dimension.objects.values_list('id', flat=True)\n<QuerySet [10, 11, 12, 13, 14, 15, 16, 17, 18]>\n>>> qs = (\n\tDimension.objects.filter(pk__in=[10, 11])\n\t.union(Dimension.objects.filter(pk__in=[16, 17])\n\t.order_by('order')\n)\n>>> qs\n<QuerySet [<Dimension: boeksoort>, <Dimension: groot",
+    "patch_summary": "Modified 2 files: django/db/models/sql/compiler.py, django/db/models/sql/query.py (11 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bRawSQL\\b on line 14: resolved.set_source_expressions([RawSQL('%d' % len(self.query.select), ())])"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/models/sql/compiler.py",
+      "django/db/models/sql/query.py"
+    ],
+    "patch_size_lines": 11
+  },
+  {
+    "instance_id": "django__django-10973",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Use subprocess.run and PGPASSWORD for client in postgres backend\nDescription\n\t\n\u200bsubprocess.run was added in python 3.5 (which is the minimum version since Django 2.1). This function allows you to pass a custom environment for the subprocess.\nUsing this in django.db.backends.postgres.client to set PGPASSWORD simplifies the code and makes it more reliable.\n",
+    "patch_summary": "Modified: django/db/backends/postgresql/client.py (37 lines)",
+    "security_patterns_matched": {
+      "command_exec": [
+        "\\bsubprocess\\b on line 54: subprocess.run(args, check=True, env=subprocess_env)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/backends/postgresql/client.py"
+    ],
+    "patch_size_lines": 37
+  },
+  {
+    "instance_id": "django__django-11001",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Incorrect removal of order_by clause created as multiline RawSQL\nDescription\n\t\nHi.\nThe SQLCompiler is ripping off one of my \"order by\" clause, because he \"thinks\" the clause was already \"seen\" (in SQLCompiler.get_order_by()). I'm using expressions written as multiline RawSQLs, which are similar but not the same. \nThe bug is located in SQLCompiler.get_order_by(), somewhere around line computing part of SQL query without ordering:\nwithout_ordering = self.ordering_parts.search(sql).group(1)\nThe sql",
+    "patch_summary": "Modified: django/db/models/sql/compiler.py (3 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bRawSQL\\b on line 9: # Multiline ordering SQL clause may appear from RawSQL."
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "patch_size_lines": 3
+  },
+  {
+    "instance_id": "django__django-11011",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make FileResponse always set Content-Disposition header.\nDescription\n\t \n\t\t(last modified by Piotr Kunicki)\n\t \nFileResponse currently sets the Content-Disposition header only if as_attachment is true.\nSetting it explicitly to, e.g. 'inline; filename=\"example.png\"' in the other case would allow the browser to set a default name for that inline file in case a user attempts to download it with the 'Save image as...' option.\nThat filename value is also visible in the title of the tab when image is be",
+    "patch_summary": "Modified: django/http/response.py (20 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 17: filename = self.filename or os.path.basename(filename)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/http/response.py"
+    ],
+    "patch_size_lines": 20
+  },
+  {
+    "instance_id": "django__django-11034",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Disabled field in admin use hard coded label_suffix\nDescription\n\t\nIn the class helpers.AdminReadonlyField, the label_tag method has hard coded \":\" It is nor configurable neither able to tranlate (in French we use a space before \":\").\n",
+    "patch_summary": "Modified: django/contrib/admin/helpers.py (2 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bformat_html\\b on line 9: return format_html('<label{}>{}{}</label>', flatatt(attrs), capfirst(label), sel"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/helpers.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "django__django-11044",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make Form data/files initialize with an empty MultiValueDict rather than dict\nDescription\n\t\nYou might have a look here:\n\u200bhttps://github.com/django/django/blob/362813d6287925b8f63f/django/forms/forms.py#L78\nNone is converted to a regular dict but not to a QueryDict.\nMethods of the form might rely on the API of a QueryDict such as 'iterlists' or 'getlist' which a regular dict doesn't provide.\n",
+    "patch_summary": "Modified: django/forms/forms.py (5 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\bMultiValueDict\\b on line 8: from django.utils.datastructures import MultiValueDict",
+        "\\bMultiValueDict\\b on line 18: self.data = MultiValueDict() if data is None else data",
+        "\\bMultiValueDict\\b on line 19: self.files = MultiValueDict() if files is None else files"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/forms/forms.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "django__django-11057",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "admin check for AuthenticationMiddleware should allow subclasses\nDescription\n\t\nI am attempting an upgrade from 2.1 to 2.2b1. I have a custom middleware in place for authentication which essentially wraps around the base AuthenticationMiddleware and sets/unsets a cookie upon login and logout. This was working with Django 2.1 as my authentication middleware.\nNow, when I attempt to start my application, the check fails with admin.E408:\n?: (admin.E408) 'django.contrib.auth.middleware.AuthenticationM",
+    "patch_summary": "Modified: django/contrib/admin/checks.py (28 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bauthenticat on line 42: _contains_subclass('django.contrib.auth.backends.ModelBackend', settings.AUTHENT",
+        "\\bauthenticat on line 53: if not _contains_subclass('django.contrib.auth.middleware.AuthenticationMiddlewa"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/checks.py"
+    ],
+    "patch_size_lines": 28
+  },
+  {
+    "instance_id": "django__django-11119",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Engine.render_to_string() should honor the autoescape attribute\nDescription\n\t\nIn Engine.render_to_string, a Context is created without specifying the engine autoescape attribute. So if you create en engine with autoescape=False and then call its render_to_string() method, the result will always be autoescaped. It was probably overlooked in [19a5f6da329d58653bcda85].\n",
+    "patch_summary": "Modified: django/template/engine.py (2 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bautoescape\\b on line 9: return t.render(Context(context, autoescape=self.autoescape))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/template/engine.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "django__django-11270",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add validation of target argument in startapp command.\nDescription\n\t\nWhen someone calls startapp command with a target argument, The app will overlay on the target directory.\nIf the target directory has invalid name, the app can not be imported.\nSo, I think it would be good to add validation on target directory's name like app name validation.\n",
+    "patch_summary": "Modified: django/core/management/templates.py (14 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 9: self.validate_name(os.path.basename(target), 'directory')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/templates.py"
+    ],
+    "patch_size_lines": 14
+  },
+  {
+    "instance_id": "django__django-11276",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Use Python stdlib html.escape() to in django.utils.html.escape()\nDescription\n\t\nThe function django.utils.html.escape() partially duplicates the Python stdlib function html.escape(). We can replace this duplication with wider community developed version.\nhtml.escape() has been available since Python 3.2:\n\u200bhttps://docs.python.org/3/library/html.html#html.escape\nThis function is also faster than Django's. As Python bug \u200bhttps://bugs.python.org/issue18020 concludes, using .replace() can be faster th",
+    "patch_summary": "Modified: django/utils/html.py (26 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bmark_safe\\b on line 31: return mark_safe(html.escape(str(text)))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/utils/html.py"
+    ],
+    "patch_size_lines": 26
+  },
+  {
+    "instance_id": "django__django-11281",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Improve typography of user facing strings.\nDescription\n\t\nInspired by comment: https://code.djangoproject.com/ticket/30399#comment:2\nPrefer:\n\u201c\u201d for quotes\n\u2019 for contractions\n\u2014 rather than --\n\u2026 rather than ...\n",
+    "patch_summary": "Modified 22 files (184 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bcsrf\\b on line 583: 'no-referrer\u201d header, please remove them. The CSRF protection '"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/models.py",
+      "django/contrib/admin/options.py",
+      "django/contrib/auth/forms.py",
+      "django/contrib/auth/password_validation.py",
+      "django/contrib/contenttypes/views.py",
+      "django/contrib/flatpages/forms.py",
+      "django/contrib/flatpages/migrations/0001_initial.py",
+      "django/contrib/flatpages/models.py",
+      "django/contrib/gis/db/models/fields.py",
+      "django/contrib/gis/views.py",
+      "django/contrib/postgres/fields/hstore.py",
+      "django/contrib/postgres/forms/jsonb.py",
+      "django/contrib/redirects/migrations/0001_initial.py",
+      "django/contrib/redirects/models.py",
+      "django/core/validators.py",
+      "django/db/models/fields/__init__.py",
+      "django/forms/models.py",
+      "django/forms/utils.py",
+      "django/views/csrf.py",
+      "django/views/generic/dates.py",
+      "django/views/generic/list.py",
+      "django/views/static.py"
+    ],
+    "patch_size_lines": 184
+  },
+  {
+    "instance_id": "django__django-11396",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Cannot order query by constant value on PostgreSQL\nDescription\n\t \n\t\t(last modified by Sven R. Kunze)\n\t \nMyModel.objects.annotate(my_column=Value('asdf')).order_by('my_column').values_list('id')\nProgrammingError: non-integer constant in ORDER BY\nLINE 1: ...odel\".\"id\" FROM \"mymodel\" ORDER BY 'asdf' ASC...\nDoes it qualify as a bug this time? ;-)\n",
+    "patch_summary": "Modified: django/db/models/sql/compiler.py (17 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bRawSQL\\b on line 9: from django.db.models.expressions import OrderBy, Random, RawSQL, Ref, Value"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "patch_size_lines": 17
+  },
+  {
+    "instance_id": "django__django-11423",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "GenericRelation and prefetch_related: wrong caching with cyclic prefetching.\nDescription\n\t\nHello @all!\nI encountered an issue with GenericRelations. Here is an example to reproduce this issue: \u200bhttps://github.com/FinnStutzenstein/GenericRelatedPrefetch\nJust do a migrate and runserver. The code showing the error is started automatically in main/apps.py. Please start with --noreload not to have the output twice.\nWhats the problem?\nI have a generic model (Tag) that have a content_object. Then there",
+    "patch_summary": "Modified: django/contrib/contenttypes/fields.py (41 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 64: queryset.filter(query),"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/contenttypes/fields.py"
+    ],
+    "patch_size_lines": 41
+  },
+  {
+    "instance_id": "django__django-11433",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Allow `cleaned_data` to overwrite fields' default values.\nDescription\n\t\nSee comments here: \u200bhttps://github.com/django/django/pull/7068/files#r289432409\nCurrently, when submitting a form, if 'some_field' isn't in the data payload (e.g. it wasn't included in the form, perhaps because its value is derived from another field), and 'some_field' has a default value on the model, it cannot be overwritten with 'self.cleaned_data'.\nThis does not really follow the paradigm of modifying data in 'cleaned_da",
+    "patch_summary": "Modified: django/forms/models.py (7 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\bcleaned_data\\b on line 13: cleaned_data.get(f.name) in form[f.name].field.empty_values"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/forms/models.py"
+    ],
+    "patch_size_lines": 7
+  },
+  {
+    "instance_id": "django__django-11591",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Raise a descriptive error on unsupported operations following QuerySet.union(), intersection(), and difference().\nDescription\n\t\nThe documentation for QuerySet.union() says, \"In addition, only LIMIT, OFFSET, and ORDER BY (i.e. slicing and order_by()) are allowed on the resulting QuerySet.\", however, there isn't any strict enforcement about this -- some operations like QuerySet.count() might appear to work. See #27982 and #27990 for confusion about this.\n",
+    "patch_summary": "Modified: django/db/models/query.py (18 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 9: clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/models/query.py"
+    ],
+    "patch_size_lines": 18
+  },
+  {
+    "instance_id": "django__django-11701",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Admin search with a null character crashes with \"A string literal cannot contain NUL (0x00) characters.\" on PostgreSQL\nDescription\n\t\nInput following URL to browser URL field and access.\n\u200bhttp://localhost/admin/auth/user/?q=%00\nCrash with following Error.\nEnvironment:\nRequest Method: GET\nRequest URL: http://localhost/admin/auth/user/?q=%00\nDjango Version: 2.1.4\nPython Version: 3.6.7\nInstalled Applications:\n['django.contrib.auth',\n 'django.contrib.contenttypes',\n 'django.contrib.sessions',\n 'djang",
+    "patch_summary": "Modified: django/contrib/admin/views/main.py (19 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 36: _search_form = self.search_form_class(request.GET)",
+        "\\bcleaned_data\\b on line 40: self.query = _search_form.cleaned_data.get(SEARCH_VAR) or ''"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/views/main.py"
+    ],
+    "patch_size_lines": 19
+  },
+  {
+    "instance_id": "django__django-11883",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make cache.delete() return whether or not it suceeded.\nDescription\n\t\nIt can be quite useful when dealing with complex caching/locking systems or simply for logging purposes.\nMemcache clients already returns this value and it should be straigtforward to implement for file, inmemory, and database backend based on the number of returned rows.\nRedis del operation also returns the number of keys it successfully deleted so it should be implementable if it's eventually added as discussed on the mailing",
+    "patch_summary": "Modified 6 files (31 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 40: return bool(cursor.rowcount)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/cache/backends/base.py",
+      "django/core/cache/backends/db.py",
+      "django/core/cache/backends/dummy.py",
+      "django/core/cache/backends/filebased.py",
+      "django/core/cache/backends/locmem.py",
+      "django/core/cache/backends/memcached.py"
+    ],
+    "patch_size_lines": 31
+  },
+  {
+    "instance_id": "django__django-11885",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Combine fast delete queries\nDescription\n\t\nWhen emulating ON DELETE CASCADE via on_delete=models.CASCADE the deletion.Collector will try to perform fast queries which are DELETE FROM table WHERE table.pk IN .... There's a few conditions required for this fast path to be taken but when this happens the collection logic should combine such queries by table to reduce the number of roundtrips to the database.\nFor example, given the following models\nclass Person(models.Model):\n\tfriends = models.ManyTo",
+    "patch_summary": "Modified 2 files: django/contrib/admin/utils.py, django/db/models/deletion.py (130 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 210: return related_model._base_manager.using(self.using).filter(predicate)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/admin/utils.py",
+      "django/db/models/deletion.py"
+    ],
+    "patch_size_lines": 130
+  },
+  {
+    "instance_id": "django__django-12049",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Applied migration detection may fail when using a case-insensitive collation\nDescription\n\t \n\t\t(last modified by Tim Graham)\n\t \nHello, \nI'm using this guide \u200bhttps://datascience.blog.wzb.eu/2017/03/21/using-django-with-an-existinglegacy-database for my studies with camelCasing together with Django (yes, I'm still trying to keep the naming convention we have inside our DB, also for the model's names)\nNow, I'm really new to Django and I don't know if it's intended but this part of code inside djang",
+    "patch_summary": "Modified: django/db/migrations/executor.py (36 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 11: existing_table_names = set(self.connection.introspection.table_names(cursor))",
+        "\\bcursor\\b on line 49: self.connection.cursor(),"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/migrations/executor.py"
+    ],
+    "patch_size_lines": 36
+  },
+  {
+    "instance_id": "django__django-12091",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Deprecate HttpRequest.is_ajax.\nDescription\n\t \n\t\t(last modified by Mariusz Felisiak)\n\t \nAs discussed on \u200bthis django-developers thread this should be deprecated.\nIt inspects the non-standard header X-Requested-Wiith that is set by jQuery and maybe other frameworks. However jQuery's popularity, especially for making requests, is decreasing thanks to changes such as the new fetch() JS API.\nAlso in the cases this property is used to determine the kind of content to send to a client, it'd be better t",
+    "patch_summary": "Modified 3 files: django/http/request.py, django/views/debug.py, django/views/i18n.py (17 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 25: 'request.is_ajax() is deprecated. See Django 3.1 release notes '",
+        "\\brequest\\. on line 43: if request.accepts('text/html'):",
+        "\\brequest\\. on line 60: (next_url or request.accepts('text/html')) and"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/http/request.py",
+      "django/views/debug.py",
+      "django/views/i18n.py"
+    ],
+    "patch_size_lines": 17
+  },
+  {
+    "instance_id": "django__django-12187",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Allow configuration of where to save staticfiles manifest.\nDescription\n\t\nA standard Django deploy has all staticfiles accessible to all users. This is understandable, if undesirable. By itself this is not a huge problem since those on the public Internet don't know the filenames of all of the files a deployment has, and fuskering the entire possible namespace isn't feasible and is also detectable.\nHowever, deployments that make use of ManifestStaticFilesStorage will most likely expose a master l",
+    "patch_summary": "Modified: django/contrib/staticfiles/storage.py (13 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 19: with self.manifest_storage.open(self.manifest_name) as manifest:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/staticfiles/storage.py"
+    ],
+    "patch_size_lines": 13
+  },
+  {
+    "instance_id": "django__django-12198",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Allow sensitive_variables() to preserve the signature of its decorated function\nDescription\n\t\nWhen the method authenticate of a custom AuthenticationBackend is decorated with sensitive_variables, inspect.getcallargs will always match.\nCalling the authenticate function will attempt to call this backend with any set of credentials and will raise an uncaught TypeError for an unmatching backend.\nAuthentication with such decorated backends used to work in version 1.6.\n",
+    "patch_summary": "Modified 3 files: django/contrib/auth/__init__.py, django/db/models/sql/query.py, django/template/base.py (17 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bauthenticat on line 8: backend_signature = inspect.signature(backend.authenticate)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/__init__.py",
+      "django/db/models/sql/query.py",
+      "django/template/base.py"
+    ],
+    "patch_size_lines": 17
+  },
+  {
+    "instance_id": "django__django-12343",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Admin: Render foreign key models as links for readonly users\nDescription\n\t\nIn the admin UI, when viewing a model for which you have view only permission, foreign key / m2m fields are rendered as plaintext representation of the target object.\nIt would be nicer to render those as links instead so that a readonly user can navigate through the relationships.\nThe link should only be rendered if the user has permission to view the target model.\ndjango-developers discussion: \u200bhttps://groups.google.com/",
+    "patch_summary": "Modified: django/contrib/admin/helpers.py (23 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bformat_html\\b on line 33: return format_html('<a href=\"{}\">{}</a>', url, remote_obj)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/helpers.py"
+    ],
+    "patch_size_lines": 23
+  },
+  {
+    "instance_id": "django__django-12360",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add system check for the length of auth permissions codenames.\nDescription\n\t\nI stumbled across this while performing some migrations on models with rather... descriptive names (my original model was dynamically created).\nAnyway, it looks like in cases where a model name is just under the 100 character limit, and contrib.auth is used, the codenames generated for the default permissions (ie. add_*, change_*, delete_*, view_*) can exceed the maximum 100 characters on the Permission model.\nAs an exa",
+    "patch_summary": "Modified: django/contrib/auth/checks.py (39 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bpermission on line 8: permission_codename_max_length = Permission._meta.get_field('codename').max_leng",
+        "\\bpermission on line 16: # Check builtin permission codename length.",
+        "\\bpermission on line 21: if max_builtin_permission_codename_length > permission_codename_max_length:",
+        "\\bpermission on line 22: model_name_max_length = permission_codename_max_length - (",
+        "\\bpermission on line 28: \"for its builtin permission codenames to be at most %d \"",
+        "\\bpermission on line 33: permission_codename_max_length,",
+        "\\bpermission on line 46: # Check custom permission codename length.",
+        "\\bpermission on line 47: if len(codename) > permission_codename_max_length:",
+        "\\bpermission on line 50: \"The permission codenamed '%s' of model '%s.%s' is \"",
+        "\\bpermission on line 55: permission_codename_max_length,"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/checks.py"
+    ],
+    "patch_size_lines": 39
+  },
+  {
+    "instance_id": "django__django-12431",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "FileResponse with temporary file closing connection.\nDescription\n\t \n\t\t(last modified by Oskar Persson)\n\t \nI think I might've found a regression in #30565. When I run the following tests (in their defined order) against Postgres I get the error below.\nimport tempfile\nfrom django.contrib.auth import get_user_model\nfrom django.http import FileResponse\nfrom django.test import TestCase\nUser = get_user_model()\nclass MyTests(TestCase):\n\tdef setUp(self):\n\t\tself.user = User.objects.create(username='user'",
+    "patch_summary": "Modified 3 files: django/core/handlers/base.py, django/core/handlers/wsgi.py, django/http/response.py (46 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 9: response._resource_closers.append(request.close)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/handlers/base.py",
+      "django/core/handlers/wsgi.py",
+      "django/http/response.py"
+    ],
+    "patch_size_lines": 46
+  },
+  {
+    "instance_id": "django__django-12453",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "`TransactionTestCase.serialized_rollback` fails to restore objects due to ordering constraints\nDescription\n\t\nI hit this problem in a fairly complex projet and haven't had the time to write a minimal reproduction case. I think it can be understood just by inspecting the code so I'm going to describe it while I have it in mind.\nSetting serialized_rollback = True on a TransactionTestCase triggers \u200brollback emulation. In practice, for each database:\nBaseDatabaseCreation.create_test_db calls connecti",
+    "patch_summary": "Modified: django/db/backends/base/creation.py (13 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bdeserializ on line 23: for obj in serializers.deserialize('json', data, using=self.connection.alias):"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/base/creation.py"
+    ],
+    "patch_size_lines": 13
+  },
+  {
+    "instance_id": "django__django-12458",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Serialization dependency sorting disallows circular references unneccesarily.\nDescription\n\t\nThe core.serialization.sort_dependencies() function takes a list of apps and/or models, and resolves this into a sorted flat list of models, ready to be serialized in that order. This function is intended to make natural foreign keys work, by serializing models referenced by a natural key before the referencing models. When deserializing, this guarantees that natural key references can be resolved, becaus",
+    "patch_summary": "Modified 2 files: django/core/management/commands/dumpdata.py, django/core/serializers/__init__.py (36 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bserializ on line 10: models = serializers.sort_dependencies(app_list.items(), allow_cycles=True)",
+        "\\bserializ on line 60: \"Can't resolve dependencies for %s in serialized app list.\""
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/dumpdata.py",
+      "django/core/serializers/__init__.py"
+    ],
+    "patch_size_lines": 36
+  },
+  {
+    "instance_id": "django__django-12508",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add support for ./manage.py dbshell -c SQL\nDescription\n\t\nAt the moment you cannot run specific SQL directly with dbshell:\n./manage.py dbshell -c \"select * from auth_group\"\nYou have to use pipes, that are not always convenient:\necho \"select * from auth_group\" | ./manage.py dbshell\nIf we add -c argument, it would be in sync with shell command, where you could provide commands already.\n",
+    "patch_summary": "Modified 8 files (60 lines)",
+    "security_patterns_matched": {
+      "command_exec": [
+        "\\bsubprocess\\b on line 39: import subprocess",
+        "\\bsubprocess\\b on line 70: except subprocess.CalledProcessError as e:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/base.py",
+      "django/core/management/commands/dbshell.py",
+      "django/db/backends/base/client.py",
+      "django/db/backends/mysql/client.py",
+      "django/db/backends/mysql/creation.py",
+      "django/db/backends/oracle/client.py",
+      "django/db/backends/postgresql/client.py",
+      "django/db/backends/sqlite3/client.py"
+    ],
+    "patch_size_lines": 60
+  },
+  {
+    "instance_id": "django__django-12519",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Subquery annotations are omitted in group by query section if multiple annotation are declared\nDescription\n\t \n\t\t(last modified by Johannes Maron)\n\t \nSadly there is more regression in Django 3.0.2 even after #31094.\nBackground: It's the same query as #31094. I tried upgrading to Django 3.0.2 and now I get duplicate results. Even tho they query should be distinct. Where on 2.2 the queryset yields 490 results, it's 519 on 3.0.\nA quick diff on the queries still reveals a different grouped by section",
+    "patch_summary": "Modified 3 files: django/db/backends/mysql/base.py, django/db/backends/mysql/validation.py, django/db/models/expressions.py (28 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 11: with self.cursor() as cursor:",
+        "\\bexecute\\s*\\( on line 12: cursor.execute('SELECT @@sql_mode')",
+        "\\bcursor\\b on line 13: sql_mode = cursor.fetchone()"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/mysql/base.py",
+      "django/db/backends/mysql/validation.py",
+      "django/db/models/expressions.py"
+    ],
+    "patch_size_lines": 28
+  },
+  {
+    "instance_id": "django__django-12613",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "XML serializer doesn't handle JSONFields.\nDescription\n\t\nI have code:\ndata = serializers.serialize(\"xml\", queryset, fields=fields)\nif I choose specific fields, which are not JSONField, it is ok. But if I choose field, which is JSONField, I receive error\n File \"/Users/ustnv/PycharmProjects/fpg_nko/venv/lib/python3.6/site-packages/django/core/serializers/__init__.py\", line 128, in serialize\n\ts.serialize(queryset, **options)\n File \"/Users/ustnv/PycharmProjects/fpg_nko/venv/lib/python3.6/site-package",
+    "patch_summary": "Modified: django/core/serializers/xml_serializer.py (12 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bjson\\.loads?\\b on line 34: value = json.loads(value, cls=field.decoder)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/serializers/xml_serializer.py"
+    ],
+    "patch_size_lines": 12
+  },
+  {
+    "instance_id": "django__django-12669",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add proper field validation to QuerySet.order_by.\nDescription\n\t\nWhen you annotate a QuerySet with a uuid key, the order_by functionality breaks for the uuid column because the uuid is \"not a valid order_by argument\".\nChanging the constant django.db.models.sql.constants.ORDER_PATTERN by allowing a \"-\"\nfrom\nORDER_PATTERN = re.compile(r'\\?|[-+]?[.\\w]+$')\nto \nORDER_PATTERN = re.compile(r'\\?|[-+]?[.\\-\\w]+$')\nfixes this in PostgreSQL. \nIs there a reason the former pattern was used, is it incompatible ",
+    "patch_summary": "Modified 2 files: django/db/models/sql/constants.py, django/db/models/sql/query.py (30 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bRawSQL\\b on line 44: 'deprecated. Wrap %r in a RawSQL expression before '"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/models/sql/constants.py",
+      "django/db/models/sql/query.py"
+    ],
+    "patch_size_lines": 30
+  },
+  {
+    "instance_id": "django__django-12961",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "order_by() with expressions crashes on union() querysets.\nDescription\n\t \n\t\t(last modified by Mariusz Felisiak)\n\t \nI have read the recent tickets about unions and order_by (#31496, #27995, #30628) , and my bug is slightly different, so I hope it's not a duplicate. \nLet's consider two similar models: \nclass EntityA(models.Model):\n\tname_a = models.CharField(max_length=128, null=True)\n\tdt_a = models.DateTimeField(null=True)\nclass EntityB(models.Model):\n\tname_b = models.CharField(max_length=128, null",
+    "patch_summary": "Modified: django/db/models/sql/compiler.py (7 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bRawSQL\\b on line 9: from django.db.models.expressions import F, OrderBy, Random, RawSQL, Ref, Value"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "patch_size_lines": 7
+  },
+  {
+    "instance_id": "django__django-12973",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add hint to the E410 about AuthenticationMiddleware.\nDescription\n\t\nGiven an empty MIDDLEWARE in your project, you try and run the admin.\nThe system checks framework kicks in, giving you:\n(admin.E408) 'django.contrib.auth.middleware.AuthenticationMiddleware' must be in MIDDLEWARE in order to use the admin application.\n(admin.E409) 'django.contrib.messages.middleware.MessageMiddleware' must be in MIDDLEWARE in order to use the admin application.\n(admin.E410) 'django.contrib.sessions.middleware.Ses",
+    "patch_summary": "Modified: django/contrib/admin/checks.py (6 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bauthenticat on line 12: \"'django.contrib.auth.middleware.AuthenticationMiddleware'.\""
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/checks.py"
+    ],
+    "patch_size_lines": 6
+  },
+  {
+    "instance_id": "django__django-13085",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "compilemessages needlessly runs msgfmt on unchanged .po files\nDescription\n\t\nI have a project where running django-admin compilemessages takes 1.75 seconds. Running it again, when all the .mo files already exists and are up-to-date, also takes 1.75 seconds.\nI propose that compilemessages.py is changed so that it only invokes msgfmt when it would do anything useful. This can be implemented by checking the mtime of the .po file and the corresponding .mo file. (If statting the .mo file fails, treat ",
+    "patch_summary": "Modified: django/core/management/commands/compilemessages.py (24 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 17: with fn.open('rb') as f:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/compilemessages.py"
+    ],
+    "patch_size_lines": 24
+  },
+  {
+    "instance_id": "django__django-13089",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "cache.backends.db._cull sometimes fails with 'NoneType' object is not subscriptable\nDescription\n\t \n\t\t(last modified by Guillermo Bonveh\u00ed)\n\t \nI'm sporadically getting some cache errors using database backend.\nThe error is: 'NoneType' object is not subscriptable\nAnd the backtrace:\n/usr/local/lib/python3.7/site-packages/django/core/handlers/base.py:143\u2192 _get_response\n/usr/local/lib/python3.7/site-packages/django/template/response.py:108\u2192 render\n/usr/local/lib/python3.7/site-packages/django/utils/de",
+    "patch_summary": "Modified: django/core/cache/backends/db.py (9 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 11: last_cache_key = cursor.fetchone()",
+        "\\bexecute\\s*\\( on line 13: cursor.execute("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/core/cache/backends/db.py"
+    ],
+    "patch_size_lines": 9
+  },
+  {
+    "instance_id": "django__django-13109",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "ForeignKey.validate() should validate using the base manager.\nDescription\n\t\nForeignKey.validate() should validate using the base manager instead of the default manager.\nConsider the models:\nclass ArticleManager(models.Manage):\n\tdef get_queryset(self):\n\t\tqs = super().get_queryset()\n\t\treturn qs.filter(archived=False)\nclass Article(models.Model):\n\ttitle = models.CharField(max_length=100)\n\tarchived = models.BooleanField(default=False)\n\t# Don't include archived articles by default.\n\tobjects = Article",
+    "patch_summary": "Modified: django/db/models/fields/related.py (2 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 9: qs = self.remote_field.model._base_manager.using(using).filter("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/models/fields/related.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "django__django-13207",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Custom collations\nDescription\n\t \n\t\t(last modified by Tom Carrick)\n\t \nMailing list, but it didn't get any responses: \u200bhttps://groups.google.com/u/2/g/django-developers/c/djMQwwxtCVY\nWe have the various CI fields on postgres, but these are \u200bdiscouraged since pg12 in favour of \u200bnondeterministic collations. I think it'd be useful to have a way to do this in Django, though I'm not sure what the API would look like. My initial thought, knowing very little about the ORM, is a Collation class that can b",
+    "patch_summary": "Modified 16 files (233 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bexecute\\s*\\( on line 149: cursor.execute(\"\"\"",
+        "\\bcursor\\b on line 155: row = cursor.fetchone()",
+        "\\bcursor\\b on line 226: with self.connection.cursor() as cursor:",
+        "\\bexecute\\s*\\( on line 228: cursor.execute(\"SELECT CAST('a' AS VARCHAR2(4001)) FROM dual\")",
+        "\\bcursor\\b on line 276: for column, default, collation, internal_size, is_autofield, is_json in cursor.f",
+        "\\bcursor\\b on line 312: with self.connection.cursor() as cursor:",
+        "\\bexecute\\s*\\( on line 313: cursor.execute(\"\"\"",
+        "\\bcursor\\b on line 316: return cursor.fetchone()[0]",
+        "\\bcursor\\b on line 372: collations = self._get_column_collations(cursor, table_name)",
+        "\\bcursor\\b on line 390: def _get_column_collations(self, cursor, table_name):",
+        "\\bexecute\\s*\\( on line 391: row = cursor.execute(\"\"\""
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/inspectdb.py",
+      "django/db/backends/base/features.py",
+      "django/db/backends/base/introspection.py",
+      "django/db/backends/base/schema.py",
+      "django/db/backends/mysql/features.py",
+      "django/db/backends/mysql/introspection.py",
+      "django/db/backends/mysql/schema.py",
+      "django/db/backends/oracle/features.py",
+      "django/db/backends/oracle/introspection.py",
+      "django/db/backends/oracle/schema.py",
+      "django/db/backends/postgresql/features.py",
+      "django/db/backends/postgresql/introspection.py",
+      "django/db/backends/sqlite3/features.py",
+      "django/db/backends/sqlite3/introspection.py",
+      "django/db/backends/sqlite3/schema.py",
+      "django/db/models/fields/__init__.py"
+    ],
+    "patch_size_lines": 233
+  },
+  {
+    "instance_id": "django__django-13279",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Session data cannot be decoded during the transition to Django 3.1.\nDescription\n\t\nIn d4fff711d4c97356bd6ba1273d2a5e349326eb5f (#31274) we've changed format for session data, that's why setting DEFAULT_HASHING_ALGORITHM to 'sha1' is not enough to support running multiple instances of the same project during the transition to Django 3.1.\nWe could use the legacy encode() when DEFAULT_HASHING_ALGORITHM == 'sha1' (it's a bit hacky).\n",
+    "patch_summary": "Modified: django/contrib/sessions/backends/base.py (9 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bserializ on line 20: serialized = self.serializer().dumps(session_dict)",
+        "\\bserializ on line 21: hash = self._hash(serialized)",
+        "\\bserializ on line 22: return base64.b64encode(hash.encode() + b':' + serialized).decode('ascii')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/sessions/backends/base.py"
+    ],
+    "patch_size_lines": 9
+  },
+  {
+    "instance_id": "django__django-13315",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "limit_choices_to on a ForeignKey can render duplicate options in formfield\nDescription\n\t\nIf you pass a Q object as limit_choices_to on a ForeignKey field involving a join, you may end up with duplicate options in your form.\nSee regressiontest in patch for a clear view on the problem.\n",
+    "patch_summary": "Modified: django/forms/models.py (12 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 19: formfield.queryset = formfield.queryset.filter(",
+        "\\.filter\\s*\\( on line 20: Exists(formfield.queryset.model._base_manager.filter(complex_filter)),"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/forms/models.py"
+    ],
+    "patch_size_lines": 12
+  },
+  {
+    "instance_id": "django__django-13346",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "On MySQL, Oracle, and SQLite, __in lookup doesn't work on key transforms.\nDescription\n\t\nI am currently rewriting our app where we will start using models.JSONField instead of django_mysql.models.JSONField. I noticed that the __in operator is not reacting the same way is it does on other fields.\nfirst_filter = {\u2018our_field__key__in': [0]}\nfirst_items = OurModel.objects.filter(**first_filter)\nlen(first_items)\n0\nsecond_filter = {'our_field__key': 0}\nsecond_items = OurModel.objects.filter(**second_fi",
+    "patch_summary": "Modified: django/db/models/fields/json.py (25 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bjson\\.loads?\\b on line 16: value = json.loads(value)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/models/fields/json.py"
+    ],
+    "patch_size_lines": 25
+  },
+  {
+    "instance_id": "django__django-13350",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Temporary files do not get deleted on canceled upload request.\nDescription\n\t \n\t\t(last modified by Mariusz Felisiak)\n\t \nTemporary files do not get deleted when upload (request) is canceled by client (e.g. browser is closed before upload is finished).\n",
+    "patch_summary": "Modified 2 files: django/core/files/uploadhandler.py, django/http/multipartparser.py (25 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.remove\\b on line 36: os.remove(temp_location)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/files/uploadhandler.py",
+      "django/http/multipartparser.py"
+    ],
+    "patch_size_lines": 25
+  },
+  {
+    "instance_id": "django__django-13528",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Incorrect separators when chaining floatformat to intcomma in some locales\nDescription\n\t\nWhen u use floatvalue \"2\" and intcomma together in a template the output of intcomma won't be internationalized.\nSince intcomma wont work with decimals in django 1.5.1 i tried to convert a decimal to a float in a template, but it wont give me the excepted output.\nWhen i have the value of 1000.11 it should be 1000,11 in germany, with intcomma(float(1000,11)) i get 1.000,11. But when i use Decimal(1000,11)|flo",
+    "patch_summary": "Modified: django/template/defaultfilters.py (19 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bmark_safe\\b on line 30: return mark_safe(",
+        "\\bmark_safe\\b on line 41: return mark_safe("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/template/defaultfilters.py"
+    ],
+    "patch_size_lines": 19
+  },
+  {
+    "instance_id": "django__django-13530",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Using KeyTransform for JSONField produces invalid SQL in various places.\nDescription\n\t \n\t\t(last modified by Igor Jerosimi\u0107)\n\t \nUsing KeyTransform in ordering attribute of ArrayAgg function produces invalid SQL. I don't know if it matters but I'm using Postgres for DB.\n# sample model\nfrom django.db import models\nclass Parent(models.Model):\n\tname = models.CharField(default='test')\nclass Child(models.Model):\n\tparent = models.ForeignKey(\n\t\tParent,\n\t\ton_delete=models.SET_NULL,\n\t\trelated_name='childre",
+    "patch_summary": "Modified 5 files (45 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bjson\\.loads?\\b on line 69: value = json.loads(param)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/postgres/aggregates/mixins.py",
+      "django/contrib/postgres/constraints.py",
+      "django/db/models/expressions.py",
+      "django/db/models/fields/json.py",
+      "django/db/models/lookups.py"
+    ],
+    "patch_size_lines": 45
+  },
+  {
+    "instance_id": "django__django-13607",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "BaseFormSet.is_valid() produces ValidationError when there is no management form\nDescription\n\t\nI was torn between reporting this as a bug or a feature request, but then I thought if I make it a feature request it will most likely break a lot of Django apps and hence I guess that means it's more of a bug...\nAnyway so the line in question is django/forms/formsets.py:292 (in Django version 1.6.1):\nfor i in range(0, self.total_form_count()):\n...where the self.total_form_count() executes this line dj",
+    "patch_summary": "Modified: django/forms/formsets.py (53 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\bcleaned_data\\b on line 18: cleaned_data = super().clean()",
+        "\\bcleaned_data\\b on line 21: cleaned_data.setdefault(TOTAL_FORM_COUNT, 0)",
+        "\\bcleaned_data\\b on line 22: cleaned_data.setdefault(INITIAL_FORM_COUNT, 0)",
+        "\\bcleaned_data\\b on line 23: return cleaned_data"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/forms/formsets.py"
+    ],
+    "patch_size_lines": 53
+  },
+  {
+    "instance_id": "django__django-13660",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "shell command crashes when passing (with -c) the python code with functions.\nDescription\n\t\nThe examples below use Python 3.7 and Django 2.2.16, but I checked that the code is the same on master and works the same in Python 3.8.\nHere's how \u200bpython -c works:\n$ python -c <<EOF \" \nimport django\ndef f():\n\t\tprint(django.__version__)\nf()\"\nEOF\n2.2.16\nHere's how \u200bpython -m django shell -c works (paths shortened for clarify):\n$ python -m django shell -c <<EOF \"\nimport django\ndef f():\n\t\tprint(django.__vers",
+    "patch_summary": "Modified: django/core/management/commands/shell.py (4 lines)",
+    "security_patterns_matched": {
+      "command_exec": [
+        "\\bexec\\s*\\( on line 9: exec(options['command'], globals())",
+        "\\bexec\\s*\\( on line 16: exec(sys.stdin.read(), globals())"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/shell.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-13714",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "SQLite3 bad filepath raising as JSON extension error.\nDescription\n\t\nApplying migrations on an installation using spatialite backend (probably sqlite too) where the path to the database file does not exist causes a confusing JSON field error.\nTake this following DATABASES configuration. Note that the dev.sqlite3 file does not exist.\nDATABASES = {\n\t'default': {\n\t\t'ENGINE': 'django.contrib.gis.db.backends.spatialite',\n\t\t'NAME': '/home/user/app/dev.sqlite3',\n\t}\n}\nWhen running ./manage.py migrate the",
+    "patch_summary": "Modified: django/db/backends/sqlite3/features.py (11 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 13: with self.connection.cursor() as cursor:",
+        "\\bexecute\\s*\\( on line 16: cursor.execute('SELECT JSON(\\'{\"a\": \"b\"}\\')')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/sqlite3/features.py"
+    ],
+    "patch_size_lines": 11
+  },
+  {
+    "instance_id": "django__django-13722",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add a hook to customize the admin's formsets parameters\nDescription\n\t\nNew feature that adds a method on InlineModelAdmin for providing initial data for the inline formset. By default there is no implementation, although one could be implemented to use GET parameters like get_changeform_initial_data, but it wouldn't be trivial due to the list nature of formset initial data.\n",
+    "patch_summary": "Modified: django/contrib/admin/options.py (26 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 14: if request.method == 'POST':",
+        "\\brequest\\. on line 16: 'data': request.POST.copy(),",
+        "\\brequest\\. on line 17: 'files': request.FILES,",
+        "\\brequest\\. on line 18: 'save_as_new': '_saveasnew' in request.POST"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/options.py"
+    ],
+    "patch_size_lines": 26
+  },
+  {
+    "instance_id": "django__django-13797",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add support for fixtures compression in dumpdata\nDescription\n\t\nSince loaddata command support compressed fixtures [1] loading, I would propose to add fixtures compression support in dumpdata command.\n[1] \u200bhttps://docs.djangoproject.com/en/dev/ref/django-admin/#compressed-fixtures\n",
+    "patch_summary": "Modified: django/core/management/commands/dumpdata.py (45 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 35: file_root, file_ext = os.path.splitext(output)",
+        "\\bos\\.path\\b on line 55: file_name = os.path.basename(file_path)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/dumpdata.py"
+    ],
+    "patch_size_lines": 45
+  },
+  {
+    "instance_id": "django__django-13800",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Not RFC 6265 compliant cookies in contrib.messages.\nDescription\n\t \n\t\t(last modified by Nico Giefing)\n\t \nHi \nA Customer of mine is using a WAF which is handling Cookies as it is described tin the RFC: \u200bhttps://tools.ietf.org/html/rfc6265\nThe issue now is that Django is trying to use an escape-character in cookie-Values which is not supported in the RFC \nan example of such a cookie: \nmessages=\\\"123\\\\\\\"NOTRECEIVED\\\"\"\nPlease consider to get this fixed so there can be a protection of this system.\nReg",
+    "patch_summary": "Modified: django/contrib/messages/storage/cookie.py (30 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bjson\\.loads?\\b on line 28: return json.loads(data.decode('latin-1'), cls=MessageDecoder)",
+        "\\bserializ on line 41: return self.signer.sign_object(messages, serializer=MessageSerializer, compress=",
+        "\\bserializ on line 50: return self.signer.unsign_object(data, serializer=MessageSerializer)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/messages/storage/cookie.py"
+    ],
+    "patch_size_lines": 30
+  },
+  {
+    "instance_id": "django__django-13807",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "loaddata crashes on SQLite when table names are SQL keywords.\nDescription\n\t\nSteps to reproduce:\nCreate a Model called Order. (order is a SQL reserved word)\nCreate fixtures for the model\nUse manage.py loaddata to load the fixture.\nNotice that it fails with the following error. This is because the table name order is not quoted properly\n(0.000) PRAGMA foreign_key_check(order); args=None\nTraceback (most recent call last):\n File \"python3.7/site-packages/django/db/backends/utils.py\", line 82, in _exe",
+    "patch_summary": "Modified: django/db/backends/sqlite3/base.py (11 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bexecute\\s*\\( on line 9: cursor.execute("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/backends/sqlite3/base.py"
+    ],
+    "patch_size_lines": 11
+  },
+  {
+    "instance_id": "django__django-13841",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Access __file__ lazily rather than at module level\nDescription\n\t \n\t\t(last modified by William Schwartz)\n\t \nSo-called frozen Python environments (such as those mentioned in #30950) that do not set all modules' \u200b__file__ variable, which \u200bneed not be defined, cannot even import Django (without some workarounds) because a small number of Django modules use __file__ at the module level, in a class defined at the module level, or in a function that is called automatically upon import.\nFive modules tha",
+    "patch_summary": "Modified 4 files (35 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 103: with builtin_template_path('technical_404.html').open(encoding='utf-8') as fh:",
+        "\\bopen\\s*\\( on line 112: with builtin_template_path('default_urlconf.html').open(encoding='utf-8') as fh:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/password_validation.py",
+      "django/forms/renderers.py",
+      "django/utils/version.py",
+      "django/views/debug.py"
+    ],
+    "patch_size_lines": 35
+  },
+  {
+    "instance_id": "django__django-13884",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "i18n.set_language unquotes next_url and produces wrong url for url params containing \"&\" character\nDescription\n\t \n\t\t(last modified by Johannes Maron)\n\t \nWhen changing the language and the current URL parameter include a parameter value with an encoded \"&\" like \n?paramter=some%20%26%20thing\nthe redirect response from set_langauge is \n?paramter=some%20&%20thing\nwhere I would still expect the same URL from as in the beginning.\nI've written a Django test that shows this bug:\ndef test_set_language_ur",
+    "patch_summary": "Modified 2 files: django/urls/base.py, django/views/i18n.py (8 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\bresolve\\s*\\( on line 16: match = resolve(unquote(parsed.path))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/urls/base.py",
+      "django/views/i18n.py"
+    ],
+    "patch_size_lines": 8
+  },
+  {
+    "instance_id": "django__django-14007",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Database converters (from_db_value) not called for returning_fields on insert\nDescription\n\t\nMaking a subclass of BigAutoField, I've found that, unlike all other query pathways, on insert the returned integer is not passed through any database converters defined for the field - including the from_db_value hook.\nThis means that a field which would normally use a wrapper class has instead a plain integer.\nTake this field:\nclass MyAutoField(models.BigAutoField):\n\tdef from_db_value(self, value, expre",
+    "patch_summary": "Modified: django/db/models/sql/compiler.py (21 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 18: rows = self.connection.ops.fetch_returned_insert_rows(cursor)",
+        "\\bcursor\\b on line 26: cursor, self.returning_params,",
+        "\\bcursor\\b on line 30: cursor, opts.db_table, opts.pk.column,"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "patch_size_lines": 21
+  },
+  {
+    "instance_id": "django__django-14056",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make `collectstatic` warn (rather than blow up) on missing directories\nDescription\n\t\nAt present if the STATICFILES_DIRS setting contains references to directories which do not exist then the whole command will die with an OSError.\nA situation I've seen bite a few newcomers to Django is that they will have an empty static directory which (being empty) won't get tracked by git. This means that collectstatic works when they run it locally, but blows up with a (to them) cryptic error when they try t",
+    "patch_summary": "Modified: django/contrib/staticfiles/finders.py (17 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 25: if not os.path.isdir(root):",
+        "\\bos\\.path\\b on line 42: if os.path.isdir(root):"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/staticfiles/finders.py"
+    ],
+    "patch_size_lines": 17
+  },
+  {
+    "instance_id": "django__django-14179",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Handle request.get_host() raising DisallowedHost in CsrfViewMiddleware._origin_verified()\nDescription\n\t\nCurrently, on this line, CsrfViewMiddleware._origin_verified() doesn't handle request.get_host() raising DisallowedHost:\n\u200bhttps://github.com/django/django/blob/41e6b2a3c5e723256506b9ff49437d52a1f3bf43/django/middleware/csrf.py#L229-L231\nSince Django was previously fixed to handle request.get_host() raising DisallowedHost elsewhere in CsrfViewMiddleware.process_view() (see ticket #28693), it se",
+    "patch_summary": "Modified: django/middleware/csrf.py (17 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 15: good_host = request.get_host()",
+        "\\brequest\\. on line 20: 'https' if request.is_secure() else 'http',"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/csrf.py"
+    ],
+    "patch_size_lines": 17
+  },
+  {
+    "instance_id": "django__django-14313",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Deleting objects after searching related many to many field crashes the admin page\nDescription\n\t\nMinimal reproduction:\n# models.py\nclass Post(models.Model):\n title = models.String(...)\n authors = models.ManyToMany(\"User\", ...)\nclass User(models.Model):\n email = models.String(...)\n# admin.py\nclass PostAdmin(admin.ModelAdmin):\n search_fields = (\"title\", \"authors__email\")\nthen opening the admin site, opening the post page that contains only one post (any title and author assigned) and entering a se",
+    "patch_summary": "Modified 3 files: django/contrib/admin/options.py, django/contrib/admin/views/main.py, django/db/models/sql/compiler.py (69 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 107: qs = qs.filter(pk=OuterRef('pk'))",
+        "\\.filter\\s*\\( on line 108: qs = self.root_queryset.filter(Exists(qs))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/options.py",
+      "django/contrib/admin/views/main.py",
+      "django/db/models/sql/compiler.py"
+    ],
+    "patch_size_lines": 69
+  },
+  {
+    "instance_id": "django__django-14341",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Database cache.delete uses cursor after it is closed\nDescription\n\t \n\t\t(last modified by ecogels)\n\t \nThe return bool(cursor.rowcount) is outside of the with block, so the cursor will have been closed at that point.\nFrom the DB API 2.0 spec: \"The cursor will be unusable from this point forward\" \u200bhttps://www.python.org/dev/peps/pep-0249/#Cursor.close\nAs the main backend drivers don't mind it I suppose that is is open to interpretation.\nPR \u200bhttps://github.com/django/django/pull/14341\n",
+    "patch_summary": "Modified: django/core/cache/backends/db.py (2 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 9: return bool(cursor.rowcount)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/cache/backends/db.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "django__django-14382",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "django-admin startapp with trailing slash in directory name results in error\nDescription\n\t\nBash tab-completion appends trailing slashes to directory names. django-admin startapp name directory/ results in the error:\nCommandError: '' is not a valid app directory. Please make sure the directory is a valid identifier.\nThe error is caused by \u200bline 77 of django/core/management/templates.py by calling basename() on the path with no consideration for a trailing slash:\nself.validate_name(os.path.basenam",
+    "patch_summary": "Modified: django/core/management/templates.py (4 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 12: self.validate_name(os.path.basename(top_dir), 'directory')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/templates.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-14416",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "An incorrect language is sometimes displayed - redirects adding a language code to a path can be inappropriate cached by HTTP caches\nDescription\n\t\nWe have a multi-lingual site using LocaleMiddleware. With a CDN and caching reverse proxy in use, the following sequence of events can happen:\nFetch \u200bhttps://example.com/some-page/ with Accept-Language header 'de-DE,de;q=0.9'. A redirect to \u200bhttps://example.com/de/some-page/ is returned.\nFetch it again with Accept-Language header 'fr-FR,fr;q=0.9'. The",
+    "patch_summary": "Modified: django/middleware/locale.py (7 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\bredirect\\b on line 9: # Redirect to the language-specific URL as detected by",
+        "\\bredirect\\b on line 11: # redirect, so add the Vary header.",
+        "\\bredirect\\b on line 12: redirect = self.response_redirect_class(language_url)",
+        "\\bredirect\\b on line 13: patch_vary_headers(redirect, ('Accept-Language', 'Cookie'))",
+        "\\bredirect\\b on line 14: return redirect"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/locale.py"
+    ],
+    "patch_size_lines": 7
+  },
+  {
+    "instance_id": "django__django-14441",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Prevent get_image_dimensions() crash on nonexistent images.\nDescription\n\t\nWhen using the get_image_dimensions(), If a non existing file/path is passed, the function crashes\n",
+    "patch_summary": "Modified: django/core/files/images.py (5 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 10: file = open(file_or_path, 'rb')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/files/images.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "django__django-14447",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Database cache counts the DB size twice at a performance penalty\nDescription\n\t\nWe have a lot of entries in the DB cache, and I've noticed that the following query shows up in my slow query log kind of a lot (Postgresql is slow at counting things):\nSELECT COUNT(*) FROM cache_table;\nThis query is being run by the DB cache twice for every cache update in order to determine if culling is needed. First, in the cache setting code, it runs:\n\t\t\tcursor.execute(\"SELECT COUNT(*) FROM %s\" % table)\n\t\t\tnum = ",
+    "patch_summary": "Modified: django/core/cache/backends/db.py (12 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 9: self._cull(db, cursor, now, num)",
+        "\\bcursor\\b on line 18: def _cull(self, db, cursor, now, num):",
+        "\\bcursor\\b on line 30: deleted_count = cursor.rowcount"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/cache/backends/db.py"
+    ],
+    "patch_size_lines": 12
+  },
+  {
+    "instance_id": "django__django-14453",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Added message when user mispells 'urlpatterns' in some 'urls' module\nDescription\n\t\nI found this kind of error when I mispelled urlspattern instead of urlpatterns inside my blog/urls.py file.\nSo the console was throwing an error, but this error do not helped me to found the problem. Check it:\ndjango.core.exceptions.ImproperlyConfigured: The included URLconf '<module 'blog.urls'\nfrom '.../my_project/blog/urls.py'>' does not\n appear to have any patterns in it. If you see valid patterns in the file ",
+    "patch_summary": "Modified: django/urls/resolvers.py (7 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\burlpatterns\\b on line 12: \"any patterns in it. If you see the 'urlpatterns' variable \""
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/urls/resolvers.py"
+    ],
+    "patch_size_lines": 7
+  },
+  {
+    "instance_id": "django__django-14463",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add the ability to define comments in table / columns\nDescription\n\t \n\t\t(last modified by Jared Chung)\n\t \nDatabase-level comments are valuable for database administrators, data analysts, data scientists, and others who are looking to consume data that is managed by Django. Most Django-supported databases also support table-level and column-level comments. This ticket would add functionality to Django to allow Django users to specify comments for syncdb manage.py to enter into the database.\n....\n.",
+    "patch_summary": "Modified 17 files (356 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 16: table_info = connection.introspection.get_table_list(cursor)",
+        "\\bexecute\\s*\\( on line 142: self.execute(",
+        "\\bexecute\\s*\\( on line 155: self.execute(",
+        "\\bexecute\\s*\\( on line 177: self.execute(",
+        "\\bexecute\\s*\\( on line 335: cursor.execute("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/inspectdb.py",
+      "django/db/backends/base/features.py",
+      "django/db/backends/base/schema.py",
+      "django/db/backends/mysql/features.py",
+      "django/db/backends/mysql/introspection.py",
+      "django/db/backends/mysql/schema.py",
+      "django/db/backends/oracle/features.py",
+      "django/db/backends/oracle/introspection.py",
+      "django/db/backends/postgresql/features.py",
+      "django/db/backends/postgresql/introspection.py",
+      "django/db/migrations/autodetector.py",
+      "django/db/migrations/operations/__init__.py",
+      "django/db/migrations/operations/models.py",
+      "django/db/models/base.py",
+      "django/db/models/fields/__init__.py",
+      "django/db/models/fields/related.py",
+      "django/db/models/options.py"
+    ],
+    "patch_size_lines": 356
+  },
+  {
+    "instance_id": "django__django-14480",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add logical XOR support to Q() and QuerySet().\nDescription\n\t\nXOR seems to be available in \u200bPostgresql, \u200bMySQL, \u200bSequelServer and \u200bOracle but NOT \u200bsqlite. Two stackoverflow questions cover this sort of thing: \u200bhttps://stackoverflow.com/questions/50408142/django-models-xor-at-the-model-level and \u200bhttps://stackoverflow.com/questions/14711203/perform-a-logical-exclusive-or-on-a-django-q-object.\nI propose adding XOR to work with Q queries like the \u200banswer to the second question above. This will be my",
+    "patch_summary": "Modified 7 files (81 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 97: else self.model._base_manager.filter(pk__in=self.values(\"pk\"))",
+        "\\.filter\\s*\\( on line 102: other = other.model._base_manager.filter(pk__in=other.values(\"pk\"))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/base/features.py",
+      "django/db/backends/mysql/features.py",
+      "django/db/models/expressions.py",
+      "django/db/models/query.py",
+      "django/db/models/query_utils.py",
+      "django/db/models/sql/__init__.py",
+      "django/db/models/sql/where.py"
+    ],
+    "patch_size_lines": 81
+  },
+  {
+    "instance_id": "django__django-14518",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Include in CsrfViewMiddleware's bad CSRF token message where the token is from\nDescription\n\t \n\t\t(last modified by Chris Jerdonek)\n\t \nCurrently, if CsrfViewMiddleware encounters a bad CSRF token, it will reject the request with a message like--\n\"CSRF token incorrect\"\n\"CSRF token has incorrect length\"\nI noticed that it would be relatively easy to include in these messages whether the token was obtained from POST data or a custom header, which would be useful for troubleshooting. The messages are s",
+    "patch_summary": "Modified: django/middleware/csrf.py (18 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bcsrf\\b on line 29: return f'CSRF token from {token_source} {reason}.'"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/csrf.py"
+    ],
+    "patch_size_lines": 18
+  },
+  {
+    "instance_id": "django__django-14559",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Include number of rows matched in bulk_update() return value\nDescription\n\t\nCurrently, bulk_update() returns None, unlike update(), which returns \u200bthe number of rows matched.\nIt looks like it would be easy to add the same functionality to bulk_update() since bulk_update() simply calls update() repeatedly:\n\u200bhttps://github.com/django/django/blob/2b4b6c8af0aae8785bc1347cf1be2e8e70fd5ff3/django/db/models/query.py#L568\nI.e. the return values could simply be added and returned.\n",
+    "patch_summary": "Modified: django/db/models/query.py (6 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 21: rows_updated += self.filter(pk__in=pks).update(**update_kwargs)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/models/query.py"
+    ],
+    "patch_size_lines": 6
+  },
+  {
+    "instance_id": "django__django-14634",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Allow delete to provide a success message through a mixin.\nDescription\n\t\nAdd a mixin to show a message on successful object deletion.\n",
+    "patch_summary": "Modified: django/views/generic/edit.py (22 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\bHttpResponseRedirect\\b on line 39: return HttpResponseRedirect(success_url)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/views/generic/edit.py"
+    ],
+    "patch_size_lines": 22
+  },
+  {
+    "instance_id": "django__django-14664",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "ResolverMatch with some views is not pickleable\nDescription\n\t\ngiven something like the following:\ndef my_fbv(request):\n\treturn HttpResponse('yay')\n# urls.py\nurlpatterns = [\n\turl('whatever', my_fbv, name='my_fbv'),\n]\nIt is possible to do the following:\nfrom django.core.urlresolvers import resolve\nfrom pickle import dumps, loads\nloads(dumps(resolve('whatever')))\nand end up with a working ResolverMatch\nHowever, given a Class Based View (mapped to a urlconf via MyView.as_view()), or something like c",
+    "patch_summary": "Modified: django/urls/resolvers.py (4 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bpickle\\b on line 8: from pickle import PicklingError",
+        "\\bpickle\\b on line 17: raise PicklingError(f'Cannot pickle {self.__class__.__qualname__}.')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/urls/resolvers.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-14752",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Refactor AutocompleteJsonView to support extra fields in autocomplete response\nDescription\n\t \n\t\t(last modified by mrts)\n\t \nAdding data attributes to items in ordinary non-autocomplete foreign key fields that use forms.widgets.Select-based widgets is relatively easy. This enables powerful and dynamic admin site customizations where fields from related models are updated immediately when users change the selected item.\nHowever, adding new attributes to autocomplete field results currently requires",
+    "patch_summary": "Modified: django/contrib/admin/views/autocomplete.py (12 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bserializ on line 10: serialize_result(), by default:",
+        "\\bserializ on line 19: self.serialize_result(obj, to_field_name)",
+        "\\bserializ on line 25: def serialize_result(self, obj, to_field_name):"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/admin/views/autocomplete.py"
+    ],
+    "patch_size_lines": 12
+  },
+  {
+    "instance_id": "django__django-14832",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make floatformat template filter independent of USE_L10N and allow forcing unlocalized format.\nDescription\n\t \n\t\t(last modified by Tim Graham)\n\t \nSpecifically, when the filter is used within the {% localize [on|off] %} block with the localization setting opposed to the value of USE_L10N ('on' when USE_L10N = False or 'off' when USE_L10N = True), the localization setting has not effect.\nThis is due to the use of formats.number_format() without its use_l10n parameter, by the numberformat template f",
+    "patch_summary": "Modified: django/template/defaultfilters.py (40 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bmark_safe\\b on line 44: return mark_safe(formats.number_format(",
+        "\\bmark_safe\\b on line 60: return mark_safe(formats.number_format("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/template/defaultfilters.py"
+    ],
+    "patch_size_lines": 40
+  },
+  {
+    "instance_id": "django__django-14878",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Primary key constraints aren't detected on SQLite.\nDescription\n\t \n\t\t(last modified by jgr88)\n\t \nWhile creating models with \"inspectdb\" i discovered, that there are currently some issues with SQLite3 Databases.\nPrimaryKeys ain't detected properly\nDatatype double ain't detected properly\nDatatype unsigned int ain't detected properly\nReproduce these issues by creating a SQLite3 Database:\nCREATE TABLE \"test\" ( pId INTEGER NOT NULL, doubleField DOUBLE NOT NULL, uInt UNSIGNED INTEGER NOT NULL, PRIMARY ",
+    "patch_summary": "Modified: django/db/backends/sqlite3/introspection.py (21 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 28: for _, name, *_, pk in cursor.fetchall():"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/sqlite3/introspection.py"
+    ],
+    "patch_size_lines": 21
+  },
+  {
+    "instance_id": "django__django-14969",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Raise an error if a string is passed into has_perms() instead of a list\nDescription\n\t \n\t\t(last modified by lieryan)\n\t \nA colleague made this error recently doing a user.has_perms(\"foobar\") instead of the correct user.has_perms([\"foobar\"]) or user.has_perm(\"foobar\"). The code initially appeared to work fine since in Python, str is an iterable that returned individual characters as string when iterated over.\nWe checked for str in particular rather than enforcing it to be a list, since perm_list ma",
+    "patch_summary": "Modified: django/contrib/auth/models.py (5 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bpermission on line 17: raise ValueError('perm_list must be an iterable of permissions.')",
+        "\\bpermission on line 26: raise ValueError('perm_list must be an iterable of permissions.')"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/models.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "django__django-15022",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Unnecessary joins in admin changelist query\nDescription\n\t\nDjango 1.2.5\nModels:\nclass Client(models.Model):\n\tname = models.CharField(_('name'), max_length=256)\n\tname2 = models.CharField(_('unofficial or obsolete name'), max_length=256, blank=True, null=True)\n\tcontact_person = models.CharField(_('contact person'), max_length=256, blank=True, null=True)\n\t...\nclass ClientOffice(models.Model):\n\tname = models.CharField(_('name'), max_length=256)\n\tname2 = models.CharField(_('unofficial or obsolete name",
+    "patch_summary": "Modified: django/contrib/admin/options.py (4 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 18: queryset = queryset.filter(models.Q(*term_queries))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/admin/options.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-15037",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Foreign key to a specific field is not handled in inspectdb\nDescription\n\t \n\t\t(last modified by Tim Graham)\n\t \nif you have a DB like that\nCREATE TABLE foo ( id serial primary key, other_id int UNIQUE);\nCREATE TABLE bar (\n\tid serial primary key, other_id int,\n\tconstraint myconst \n\tFOREIGN KEY(other_id) references foo(other_id)\n);\nthe generated model for the bar table will have the other_id be a FK to foo and not foo(other_id).\nI'm attaching a potential fix for this. Sorry I had no time for the UTs",
+    "patch_summary": "Modified: django/core/management/commands/inspectdb.py (8 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 13: ref_pk_column = connection.introspection.get_primary_key_column(cursor, ref_db_t"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/core/management/commands/inspectdb.py"
+    ],
+    "patch_size_lines": 8
+  },
+  {
+    "instance_id": "django__django-15038",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "--squashed-name can overwrite existing migration files\nDescription\n\t\nsquashmigrations --squashed-name initial myapp 0002 will overwrite 0001_initial.py. If that migration has already been applied anywhere, the code and the database will be in an inconsistent state. Furthermore, the 0002_... migration likely depends on 0001_initial, so the new replaces = \u20260002\u2026 line added to 0001_initial.py introduces a CircularDependencyError.\nsquashmigrations should exit with an error instead of overwriting exi",
+    "patch_summary": "Modified: django/core/management/commands/squashmigrations.py (6 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 14: if os.path.exists(writer.path):"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/squashmigrations.py"
+    ],
+    "patch_size_lines": 6
+  },
+  {
+    "instance_id": "django__django-15087",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "SQLite schema introspection should use PRAGMA instead of parsing to retrieve foreign keys\nDescription\n\t\nThe SQLite backend's DatabaseIntrospection.get_relations uses a complex combination of regexes to extract foreign key constraints from DDL while \u200bPRAGMA foreign_key_list works just fine as \u200b_get_foreign_key_constraints.\n",
+    "patch_summary": "Modified 2 files: django/db/backends/sqlite3/introspection.py, django/db/backends/sqlite3/schema.py (95 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 86: for _, _, ref_table_name, column_name, ref_column_name, *_ in cursor.fetchall()",
+        "\\bcursor\\b on line 119: relations = enumerate(self.get_relations(cursor, table_name).items())",
+        "\\bcursor\\b on line 144: relations = self.connection.introspection.get_relations(cursor, other_table.name"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/sqlite3/introspection.py",
+      "django/db/backends/sqlite3/schema.py"
+    ],
+    "patch_size_lines": 95
+  },
+  {
+    "instance_id": "django__django-15103",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Make the element_id argument of json_script optional\nDescription\n\t\nI recently had a use-case where I wanted to use json_script but I didn't need any id for it (I was including the <script> inside a <template> so I didn't need an id to refer to it).\nI can't see any reason (security or otherwise) for the id to be required and making it optional doesn't seem to break any tests.\n",
+    "patch_summary": "Modified 2 files: django/template/defaultfilters.py, django/utils/html.py (17 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bmark_safe\\b on line 39: args = (element_id, mark_safe(json_str))",
+        "\\bmark_safe\\b on line 42: args = (mark_safe(json_str),)",
+        "\\bformat_html\\b on line 43: return format_html(template, *args)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/template/defaultfilters.py",
+      "django/utils/html.py"
+    ],
+    "patch_size_lines": 17
+  },
+  {
+    "instance_id": "django__django-15111",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "django-admin start[project|app] doesn't send proper user agent header when HTTP(S) url is sent.\nDescription\n\t \n\t\t(last modified by rsp2k)\n\t \nBy default, when fetching a remote template, django-admin start[app|project] uses the default urllib User Agent which causes some sites to block requests (namely gitlab, since they use cloudflare See \u200bhttps://gitlab.com/gitlab-org/gitlab/-/issues/219669).\nThis patch sets the 'User Agent' header to Django/DJANGO_VERSION.\n",
+    "patch_summary": "Modified: django/core/management/templates.py (14 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 18: the_path = os.path.join(tempdir, filename)",
+        "\\bopen\\s*\\( on line 23: with opener.open(url) as source, open(the_path, 'wb') as target:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/templates.py"
+    ],
+    "patch_size_lines": 14
+  },
+  {
+    "instance_id": "django__django-15139",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Deprecate PickleSerializer and move it out of core\nDescription\n\t\nPickle serializer has long been known to be dangerous. This is mitigated by requiring MAC on pickle in cookies, but nevertheless, RCEs continue to happen: \u200bhttps://blog.scrt.ch/2018/08/24/remote-code-execution-on-a-facebook-server/\nTo further discourage it's use, we should consider deprecating PickleSerializer and moving it into a third party package.\n",
+    "patch_summary": "Modified 4 files (35 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bpickle\\b on line 60: import pickle",
+        "\\bpickle\\b on line 77: self.protocol = pickle.HIGHEST_PROTOCOL if protocol is None else protocol",
+        "\\bpickle\\b on line 85: return pickle.dumps(obj, self.protocol)",
+        "\\bpickle\\b on line 92: return pickle.loads(data)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/sessions/backends/base.py",
+      "django/contrib/sessions/serializers.py",
+      "django/core/cache/backends/redis.py",
+      "django/core/serializers/base.py"
+    ],
+    "patch_size_lines": 35
+  },
+  {
+    "instance_id": "django__django-15166",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "DatabaseCache backend doesn't quote all fields in queries\nDescription\n\t\nSnowflake requires all fields to be quoted, otherwise they're treated as uppercase.\nThe attached patch works with stable/3.2.x, but I'll have to review it once \u200bdjango-snowflake development is caught up to Django's main branch.\n",
+    "patch_summary": "Modified 3 files: django/core/cache/backends/db.py, django/db/backends/base/operations.py, django/db/backends/oracle/operations.py (24 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bexecute\\s*\\( on line 23: cursor.execute('DELETE FROM %s WHERE %s < %%s' % ("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/cache/backends/db.py",
+      "django/db/backends/base/operations.py",
+      "django/db/backends/oracle/operations.py"
+    ],
+    "patch_size_lines": 24
+  },
+  {
+    "instance_id": "django__django-15206",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "never_cache()/cache_control() decorators raise error on duck-typed requests.\nDescription\n\t\nThe cache decorators cache_control, never_cache and sensitive_post_parameters no longer work with Django REST framework because they strictly check for an HttpRequest instance.\n",
+    "patch_summary": "Modified: django/views/decorators/cache.py (7 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 16: # Ensure argument looks like a request.",
+        "\\brequest\\. on line 26: # Ensure argument looks like a request."
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/views/decorators/cache.py"
+    ],
+    "patch_size_lines": 7
+  },
+  {
+    "instance_id": "django__django-15272",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add a management command to optimize a migration\nDescription\n\t \n\t\t(last modified by Raphael Gaschignard)\n\t \nBecause the migration optimizer still has a bit of trouble with reducing operations, you often want to edit squashed migrations and re-run it through the optimizer.\nThe attached patch contains an implementation of a management command, optimizemigration, that will help speed up this process.\noptimizemigration app_name migration_name reads a single migration, pass it through the optimizer, ",
+    "patch_summary": "Modified: django/core/management/commands/optimizemigration.py (121 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 119: with open(writer.path, \"w\", encoding=\"utf-8\") as fh:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/optimizemigration.py"
+    ],
+    "patch_size_lines": 121
+  },
+  {
+    "instance_id": "django__django-15352",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Session ID should be cleansed from error reporting\nDescription\n\t\nthe session ID should be cleansed when reporting errors, just like other credentials. A patch is available at \u200bhttps://github.com/django/django/pull/15352.\nSee also #29714 and \u200bhttps://groups.google.com/g/django-developers/c/H5hJxpwYFcw.\nA quick github search yielded multiple occasions where session IDs ended up in public bug reports:\n\u200bhttps://github.com/GibbsConsulting/django-plotly-dash/issues/376\n\u200bhttps://github.com/ome/omero-ma",
+    "patch_summary": "Modified: django/views/debug.py (23 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 37: Return a dictionary of request.COOKIES with sensitive values redacted.",
+        "\\brequest\\. on line 41: return {k: self.cleanse_setting(k, v) for k, v in request.COOKIES.items()}"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/views/debug.py"
+    ],
+    "patch_size_lines": 23
+  },
+  {
+    "instance_id": "django__django-15414",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "QuerySet.bulk_update() should perform atomic writes against routed db_for_write.\nDescription\n\t\nDiscovered in https://code.djangoproject.com/ticket/33501#comment:3 but the summary is that bulk_update doesn't set self._for_write = True prior to accessing self.db so the latter is actually db_for_read and that includes the transaction.atomic block creation.\n",
+    "patch_summary": "Modified: django/db/models/query.py (4 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 20: rows_updated += queryset.filter(pk__in=pks).update(**update_kwargs)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/models/query.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-15421",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Allow parallel test runner to work with Windows/macOS `spawn` process start method.\nDescription\n\t \n\t\t(last modified by Brandon Navra)\n\t \nPython 3.8 on MacOS has changed the default start method for the multiprocessing module from fork to spawn: \u200bhttps://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods.\nWhen running tests with the --parallel flag, this causes the worker processes to fail with django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet. as they no l",
+    "patch_summary": "Modified 2 files: django/db/backends/sqlite3/creation.py, django/utils/autoreload.py (62 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 23: root, ext = os.path.splitext(source_database_name)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/sqlite3/creation.py",
+      "django/utils/autoreload.py"
+    ],
+    "patch_size_lines": 62
+  },
+  {
+    "instance_id": "django__django-15442",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "django.utils.safestring.mark_safe forces evaluation of lazy objects\nDescription\n\t\nConsider the following example:\nfrom django.utils.safestring import mark_safe\nfrom django.utils.translation import activate, ugettext_lazy as _\ns = mark_safe(_(\"username\"))\ntpl = Template('{{ s }}')\nactivate('fr')\nprint(tpl.render(Context({'s': s})))\nI would expect this to output nom d'utilisateur (which is the french translation of username) but what happens instead is that it outputs username.\nThe reason for this",
+    "patch_summary": "Modified: django/utils/safestring.py (3 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bSafeString\\b on line 17: @keep_lazy(SafeString)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/utils/safestring.py"
+    ],
+    "patch_size_lines": 3
+  },
+  {
+    "instance_id": "django__django-15607",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Unnecessary redirect in LogoutView when ?next=... contains \"unsafe\" URL\nDescription\n\t\nReproduction instructions\nSet LOGOUT_REDIRECT_URL\nWire LogoutView.as_view() at /logout/ in the URLconf\nAdd this form to any template: <form action=\"/logout/?next=http://evil/\" method=\"POST\"><input type=\"submit\" value=\"Logout\">{% csrf_token %}</form>\nLog in, then use the form to log out\nExpected result\nYou are logged out; the next parameter is ignored; you are redirected to LOGOUT_REDIRECT_URL\nActual result\nTher",
+    "patch_summary": "Modified: django/contrib/auth/views.py (5 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 12: next_page = self.request.path"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/views.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "django__django-15669",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Create --update flag for makemigrations management command, mimicking South's one.\nDescription\n\t\nWhen I was developing with South I was able to use the --update flag for the schemamigration management command (\u200bhttp://south.readthedocs.org/en/latest/commands.html#schemamigration) to refine the latest migration.\nThis was very convenient for iterative development. Could we have an equivalent of the --update flag for Django>=1.7 makemigrations?\n(I've taken it from \u200bhttp://stackoverflow.com/question",
+    "patch_summary": "Modified: django/core/management/commands/makemigrations.py (124 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.remove\\b on line 158: os.remove(prev_path)",
+        "\\bos\\.path\\b on line 170: migration_string = os.path.relpath(path)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/core/management/commands/makemigrations.py"
+    ],
+    "patch_size_lines": 124
+  },
+  {
+    "instance_id": "django__django-15742",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Blocktranslate asvar escapes variables, but stores the result as str instance, leading to double escaping\nDescription\n\t\nIn the docs, this snippet is given as an example usage of blocktranslate with the asvar argument (here: \u200bhttps://docs.djangoproject.com/en/4.0/topics/i18n/translation/#blocktranslate-template-tag:\n{% blocktranslate asvar the_title %}The title is {{ title }}.{% endblocktranslate %}\n<title>{{ the_title }}</title>\n<meta name=\"description\" content=\"{{ the_title }}\">\nHowever, this t",
+    "patch_summary": "Modified: django/templatetags/i18n.py (4 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bmark_safe\\b on line 9: from django.utils.safestring import SafeData, SafeString, mark_safe",
+        "\\bSafeString\\b on line 18: context[self.asvar] = SafeString(result)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/templatetags/i18n.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-15957",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Prefetch objects don't work with slices\nDescription\n\t\n\u200bPrefetch() objects does not work with sliced querysets. For example the following code results in AssertionError: Cannot filter a query once a slice has been taken.:\nCategory.objects.prefetch_related(Prefetch(\n\t'post_set',\n\tqueryset=Post.objects.all()[:3],\n\tto_attr='example_posts',\n))\nThis behavior is also mentioned in \u200bthis StackOverflow answer. On the other hand it does not seem to be documented in Django Docs.\nWhy is it needed?\nMy use cas",
+    "patch_summary": "Modified: django/db/models/fields/related_descriptors.py (33 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 36: return queryset.filter(predicate)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/db/models/fields/related_descriptors.py"
+    ],
+    "patch_size_lines": 33
+  },
+  {
+    "instance_id": "django__django-16046",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Fix numberformat.py \"string index out of range\" when null\nDescription\n\t\nWhen:\nif str_number[0] == \"-\"\nencounters a number field that's null when formatting for the admin list_display this causes an \nIndexError: string index out of range\nI can attach the proposed fix here, or open a pull request on GitHub if you like?\n",
+    "patch_summary": "Modified: django/utils/numberformat.py (2 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bmark_safe\\b on line 9: return mark_safe(number)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/utils/numberformat.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "django__django-16366",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Drop support for SQLite < 3.21.0\nDescription\n\t\nSQLite 3.15+ supports functions in partial indexes.\nSQLite 3.20+ can defer constraint checks and supports PRAGMA foreign key checks.\nUbuntu Xenial ships with SQLite 3.22.0 (which will still by supported by Django) and will EOL in April 2023. Debian Buster ships with 3.27.2 and will EOL in June 2024. Python 3.7 ships with 3.21.0. \n\u200bSQLite 3.21.0 was released in October 2017. SQLite version support seems like a similar situation as GEOS libraries whic",
+    "patch_summary": "Modified 2 files: django/db/backends/sqlite3/base.py, django/db/backends/sqlite3/features.py (150 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\bcursor\\b on line 70: with self.cursor() as cursor:",
+        "\\bexecute\\s*\\( on line 72: violations = cursor.execute(\"PRAGMA foreign_key_check\").fetchall()",
+        "\\bexecute\\s*\\( on line 75: cursor.execute(",
+        "\\bexecute\\s*\\( on line 87: foreign_key = cursor.execute(",
+        "\\bcursor\\b on line 92: cursor, table_name",
+        "\\bexecute\\s*\\( on line 94: primary_key_value, bad_value = cursor.execute("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/db/backends/sqlite3/base.py",
+      "django/db/backends/sqlite3/features.py"
+    ],
+    "patch_size_lines": 150
+  },
+  {
+    "instance_id": "django__django-16400",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "migrate management command does not respect database parameter when adding Permissions.\nDescription\n\t \n\t\t(last modified by Vasanth)\n\t \nWhen invoking migrate with a database parameter, the migration runs successfully. However, there seems to be a DB read request that runs after the migration. This call does not respect the db param and invokes the db router .\nWhen naming the db as a parameter, all DB calls in the context of the migrate command are expected to use the database specified.\nI came ac",
+    "patch_summary": "Modified: django/contrib/auth/management/__init__.py (15 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bpermission on line 16: permission = Permission()",
+        "\\bpermission on line 17: permission._state.db = using",
+        "\\bpermission on line 18: permission.codename = codename",
+        "\\bpermission on line 19: permission.name = name",
+        "\\bpermission on line 20: permission.content_type = ct",
+        "\\bpermission on line 21: perms.append(permission)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/management/__init__.py"
+    ],
+    "patch_size_lines": 15
+  },
+  {
+    "instance_id": "django__django-16514",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Admin Site shall filter LogEntries by registered models\nDescription\n\t\nThis ticket has been discussed here: \u200bhttps://groups.google.com/g/django-developers/c/OyTo0P2TfAE\nIf an implementer registers more than one AdminSite, one might expect that only changes on models registered at that specific site are logged.\nThis currently is not the case, all registered sites show all entries of LogEntry. It is confusing for users to access a specific site and see log entries for models they can't access.\n",
+    "patch_summary": "Modified 2 files: django/contrib/admin/sites.py, django/contrib/admin/templatetags/log.py (18 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 49: entries = entries.filter(user__pk=user_id)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/admin/sites.py",
+      "django/contrib/admin/templatetags/log.py"
+    ],
+    "patch_size_lines": 18
+  },
+  {
+    "instance_id": "django__django-16612",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "AdminSite.catch_all_view() drops query string in redirects\nDescription\n\t\n#31747 introduced AdminSite.catch_all_view(). However, in the process it broke the ability to redirect with settings.APPEND_SLASH = True when there are query strings.\nProvided URL: \u200bhttp://127.0.0.1:8000/admin/auth/foo?id=123\nExpected redirect: \u200bhttp://127.0.0.1:8000/admin/auth/foo/?id=123\nActual redirect: \u200bhttp://127.0.0.1:8000/admin/auth/foo/\nThis seems to be because the redirect in question does not include the query str",
+    "patch_summary": "Modified: django/contrib/admin/sites.py (4 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 10: request.get_full_path(force_append_slash=True)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/contrib/admin/sites.py"
+    ],
+    "patch_size_lines": 4
+  },
+  {
+    "instance_id": "django__django-16810",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Translatable URL patterns raise 404 for non-English default language when prefix_default_language=False is used.\nDescription\n\t\nA simple django project with instruction to replicate the bug can be found here:\n\u200bgithub repo\nIn brief: prefix_default_language = False raises HTTP 404 for the default unprefixed pages if LANGUAGE_CODE is not \"en\".\nI think the problem is that the function get_language_from_path in django/utils/translation/trans_real.py returns None in case of failure instead of LANGUAGE_",
+    "patch_summary": "Modified 5 files (47 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 36: language_from_path = translation.get_language_from_path(request.path_info)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/middleware/locale.py",
+      "django/urls/resolvers.py",
+      "django/utils/translation/__init__.py",
+      "django/utils/translation/trans_null.py",
+      "django/utils/translation/trans_real.py"
+    ],
+    "patch_size_lines": 47
+  },
+  {
+    "instance_id": "django__django-16877",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "New template filter `escapeseq`\nDescription\n\t\nFollowing #34574, and after some conversations within the security team, it seems appropriate to provide a new template filter escapeseq which would be to escape what safeseq is to safe. An example of usage would be:\n{{ some_list|escapeseq|join:\",\" }}\nwhere each item of some_list is escaped before applying the join operation. This usage makes sense in a context where autoescape is off.\n",
+    "patch_summary": "Modified: django/template/defaultfilters.py (10 lines)",
+    "security_patterns_matched": {
+      "database": [
+        "\\.filter\\s*\\( on line 8: @register.filter(is_safe=True)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "django/template/defaultfilters.py"
+    ],
+    "patch_size_lines": 10
+  },
+  {
+    "instance_id": "django__django-16948",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Deprecate format_html calls without args or kwargs\nDescription\n\t \n\t\t(last modified by Michael Howitz)\n\t \nIn my experience, a common misuse of format_html is to format the HTML before calling it:\nformat_html(f\"<i>{name}</i>\")\nThis makes it act like mark_safe, allowing data through without escaping. It provides a false sense of security since format_html is meant to be the \"safe way\".\nI propose we deprecate calls to format_html that don\u2019t pass args or kwargs, and eventually raise a TypeError for s",
+    "patch_summary": "Modified: django/utils/html.py (9 lines)",
+    "security_patterns_matched": {
+      "html_rendering": [
+        "\\bformat_html\\b on line 24: \"Calling format_html() without passing args or kwargs is deprecated.\","
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/utils/html.py"
+    ],
+    "patch_size_lines": 9
+  },
+  {
+    "instance_id": "django__django-8630",
+    "repo": "django/django",
+    "repo_tier": 1,
+    "problem_statement": "Add next_page to LoginView\nDescription\n\t\nLogoutView has a next_page attribute used to override settings.LOGOUT_REDIRECT_URL.\nIt would be nice if LoginView had the same mechanism.\n",
+    "patch_summary": "Modified: django/contrib/auth/views.py (8 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\bredirect\\b on line 27: \"\"\"Return the default redirect URL.\"\"\""
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "django/contrib/auth/views.py"
+    ],
+    "patch_size_lines": 8
+  },
+  {
+    "instance_id": "pallets__flask-4074",
+    "repo": "pallets/flask",
+    "repo_tier": 1,
+    "problem_statement": "url_for can't distinguish a blueprint mounted two times\nBased on blueprint concept, I expected it to handle relative `url_for` nicely:\n\n```\nfrom flask import Blueprint, Flask, url_for\n\nbp = Blueprint('foo', __name__)\n\n@bp.route('/')\ndef func():\n    return url_for('.func')\n\napp = Flask(__name__)\napp.register_blueprint(bp, url_prefix='/foo')\napp.register_blueprint(bp, url_prefix='/bar')\n\nclient = app.test_client()\nprint client.get('/foo/').data\nprint client.get('/bar/').data\n```\n\nBoth prints write",
+    "patch_summary": "Modified 4 files (179 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 17: for bp in request.blueprints:",
+        "\\brequest\\. on line 39: for name in chain(request.blueprints, [None]):",
+        "\\brequest\\. on line 52: # request, can't use request.blueprints.",
+        "\\brequest\\. on line 65: for bp in request.blueprints:",
+        "\\brequest\\. on line 73: for bp in request.blueprints:",
+        "\\brequest\\. on line 82: for bp in request.blueprints:",
+        "\\brequest\\. on line 91: for bp in request.blueprints:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/flask/app.py",
+      "src/flask/blueprints.py",
+      "src/flask/helpers.py",
+      "src/flask/wrappers.py"
+    ],
+    "patch_size_lines": 179
+  },
+  {
+    "instance_id": "pallets__flask-4575",
+    "repo": "pallets/flask",
+    "repo_tier": 1,
+    "problem_statement": "Move `redirect` to the `Flask` app object\nAdd a `redirect` method to the `Flask` app object. Similar to functions like `flask.json.dumps`, `flask.redirect` should look for a `current_app` and call its `redirect` method. This will allow applications to override the redirect behavior.\n",
+    "patch_summary": "Modified 3 files: src/flask/__init__.py, src/flask/app.py, src/flask/helpers.py (37 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\bredirect\\b on line 16: from .helpers import redirect as redirect",
+        "\\bredirect\\b on line 27: from werkzeug.utils import redirect as _wz_redirect",
+        "\\bredirect\\b on line 35: def redirect(self, location: str, code: int = 302) -> BaseResponse:",
+        "\\bredirect\\b on line 36: \"\"\"Create a redirect response object.",
+        "\\bredirect\\b on line 38: :param location: the url of the redirect",
+        "\\bredirect\\b on line 55: from werkzeug.utils import redirect as _wz_redirect",
+        "\\bredirect\\b on line 71: def redirect(",
+        "\\bredirect\\b on line 74: \"\"\"Create a redirect response object.",
+        "\\bredirect\\b on line 77: :meth:`~flask.app.Flask.redirect`, otherwise it will use",
+        "\\bredirect\\b on line 78: :func:`werkzeug.utils.redirect`.",
+        "\\bredirect\\b on line 80: :param location: The URL to redirect to.",
+        "\\bredirect\\b on line 81: :param code: The status code for the redirect.",
+        "\\bredirect\\b on line 88: return current_app.redirect(location, code=code)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/flask/__init__.py",
+      "src/flask/app.py",
+      "src/flask/helpers.py"
+    ],
+    "patch_size_lines": 37
+  },
+  {
+    "instance_id": "pallets__flask-4992",
+    "repo": "pallets/flask",
+    "repo_tier": 1,
+    "problem_statement": "Add a file mode parameter to flask.Config.from_file()\nPython 3.11 introduced native TOML support with the `tomllib` package. This could work nicely with the `flask.Config.from_file()` method as an easy way to load TOML config files:\r\n\r\n```python\r\napp.config.from_file(\"config.toml\", tomllib.load)\r\n```\r\n\r\nHowever, `tomllib.load()` takes an object readable in binary mode, while `flask.Config.from_file()` opens a file in text mode, resulting in this error:\r\n\r\n```\r\nTypeError: File must be opened in b",
+    "patch_summary": "Modified: src/flask/config.py (11 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 39: with open(filename, \"r\" if text else \"rb\") as f:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/flask/config.py"
+    ],
+    "patch_size_lines": 11
+  },
+  {
+    "instance_id": "pallets__flask-5063",
+    "repo": "pallets/flask",
+    "repo_tier": 1,
+    "problem_statement": "Flask routes to return domain/sub-domains information\nCurrently when checking **flask routes** it provides all routes but **it is no way to see which routes are assigned to which subdomain**.\r\n\r\n**Default server name:**\r\nSERVER_NAME: 'test.local'\r\n\r\n**Domains (sub-domains):**\r\ntest.test.local\r\nadmin.test.local\r\ntest.local\r\n\r\n**Adding blueprints:**\r\napp.register_blueprint(admin_blueprint,url_prefix='',subdomain='admin')\r\napp.register_blueprint(test_subdomain_blueprint,url_prefix='',subdomain='tes",
+    "patch_summary": "Modified: src/flask/cli.py (65 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 24: \" when dispatching a request.\""
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/flask/cli.py"
+    ],
+    "patch_size_lines": 65
+  },
+  {
+    "instance_id": "psf__requests-1657",
+    "repo": "psf/requests",
+    "repo_tier": 2,
+    "problem_statement": "Session hooks broken\nRequest hooks are being [merged](https://github.com/kennethreitz/requests/blob/master/requests/sessions.py#L264) with session hooks; since both hook dicts have a list as the value, one simply overwrites the other.\n\n",
+    "patch_summary": "Modified: requests/sessions.py (18 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 32: hooks=merge_hooks(request.hooks, self.hooks),"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "requests/sessions.py"
+    ],
+    "patch_size_lines": 18
+  },
+  {
+    "instance_id": "psf__requests-1963",
+    "repo": "psf/requests",
+    "repo_tier": 2,
+    "problem_statement": "`Session.resolve_redirects` copies the original request for all subsequent requests, can cause incorrect method selection\nConsider the following redirection chain:\n\n```\nPOST /do_something HTTP/1.1\nHost: server.example.com\n...\n\nHTTP/1.1 303 See Other\nLocation: /new_thing_1513\n\nGET /new_thing_1513\nHost: server.example.com\n...\n\nHTTP/1.1 307 Temporary Redirect\nLocation: //failover.example.com/new_thing_1513\n```\n\nThe intermediate 303 See Other has caused the POST to be converted to\na GET.  The subseq",
+    "patch_summary": "Modified: requests/sessions.py (5 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 8: # Override the original request."
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "requests/sessions.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "psf__requests-4106",
+    "repo": "psf/requests",
+    "repo_tier": 2,
+    "problem_statement": "AttributeError: module 'requests.packages' has no attribute 'urllib3'\nThis [commit](https://github.com/requests/requests/commit/588e8f7f640f774e71d61b53ccb34d310172e0ad) seems to have broken requests.packages.\r\n\r\n## Expected Result\r\n\r\nrequests.packages.urllib3 to be the urllib3 package\r\n\r\n## Actual Result\r\n\r\nAttributeError: module 'requests.packages' has no attribute 'urllib3'\r\n\r\n## Reproduction Steps\r\n\r\n```python\r\nimport requests\r\nrequests.packages.urllib3\r\n```\r\n\r\n## System Information\r\n\r\n    $",
+    "patch_summary": "Modified: requests/packages.py (2 lines)",
+    "security_patterns_matched": {
+      "command_exec": [
+        "\\b__import__\\b on line 9: locals()[package] = __import__(package)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "requests/packages.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4339",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Support output to a file to support tox on CI servers\nCurrently [`tox` cannot redirect commands to files](https://bitbucket.org/hpk42/tox/issues/73/pipe-output-of-command-into-file), which means when running Pylint from within `tox` there seems to be no way to output the results to a single (for example HTML) file that a CI server can store for display.\n\n`--file-output=y` used to be close to what is needed, but it [was removed in 2.0](https://docs.pylint.org/en/latest/whatsnew/changelog.html#wha",
+    "patch_summary": "Modified: pylint/lint/run.py (31 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 46: with open(self._output, \"w\") as output:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/lint/run.py"
+    ],
+    "patch_size_lines": 31
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4492",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Allow parseable output in parallel of human-readable output\n### Current behavior\r\n\r\nCurrently, when selecting a format like JSON using the `-f` argument, it will replace the \"normal\" output. \r\n\r\n### Expected behavior\r\n\r\nIt would be nice to have it generate an output-file instead so the normal human-readable output is still there. This makes sens in a CI environment like travis or gitlab where you can see the stdout and stderr of each job but where you also want to parse the output.\r\n\r\nAllowing m",
+    "patch_summary": "Modified 3 files: pylint/lint/pylinter.py, pylint/reporters/__init__.py, pylint/reporters/multi_reporter.py (185 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 59: output_file = stack.enter_context(open(reporter_output, \"w\"))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/lint/pylinter.py",
+      "pylint/reporters/__init__.py",
+      "pylint/reporters/multi_reporter.py"
+    ],
+    "patch_size_lines": 185
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4516",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Ignore clause not ignoring directories\nThis is a different issue to [issues/908](https://github.com/PyCQA/pylint/issues/908).\r\n\r\n### Steps to reproduce\r\n1. Create a directory `test` and within that a directory `stuff`.\r\n2. Create files `test/a.py` and `test/stuff/b.py`. Put syntax errors in both.\r\n3. From `test`, run `pylint *.py **/*.py --ignore stuff`.\r\n\r\n### Current behavior\r\nPylint does not ignore `stuff/b.py`, producing the message\r\n```************* Module a\r\na.py:1:0: E0001: invalid syntax",
+    "patch_summary": "Modified 2 files: pylint/lint/expand_modules.py, pylint/lint/pylinter.py (55 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 56: or _is_in_ignore_list_re(os.path.basename(something), ignore_list_re)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/lint/expand_modules.py",
+      "pylint/lint/pylinter.py"
+    ],
+    "patch_size_lines": 55
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4661",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Make pylint XDG Base Directory Specification compliant\nI have this really annoying `.pylint.d` directory in my home folder. From what I can tell (I don't do C or C++), this directory is storing data. \r\n\r\nThe problem with this is, quite simply, that data storage has a designated spot. The `$HOME/.local/share/<PROGRAM_NAME>` folder. This is a part of the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html). A system that designates the fo",
+    "patch_summary": "Modified 2 files: pylint/config/__init__.py, setup.cfg (18 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 20: old_home = os.path.join(USER_HOME, \".pylint.d\")",
+        "\\bos\\.path\\b on line 21: if os.path.exists(old_home):"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "pylint/config/__init__.py",
+      "setup.cfg"
+    ],
+    "patch_size_lines": 18
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4812",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Config File Does not Expand Environment Variables\nIf a config file is provided that has an environment variable, such as \"%AppData%\", it fails.\r\nThis can be fixed by changing [this line](https://github.com/PyCQA/pylint/blob/master/pylint/config/option_manager_mixin.py#L259) from `config_file = os.path.expanduser(config_file)` to `config_file = os.path.expandvars(os.path.expanduser(config_file))`\r\n\r\n\r\n\n",
+    "patch_summary": "Modified: pylint/config/option_manager_mixin.py (2 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 9: config_file = os.path.expandvars(os.path.expanduser(config_file))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/config/option_manager_mixin.py"
+    ],
+    "patch_size_lines": 2
+  },
+  {
+    "instance_id": "pylint-dev__pylint-5951",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "DOC: pyreverse supported format not recognized missing puml, plantuml, mmd, etc\n### Bug description\r\n\r\nSome supported formats are not listed in the error messaging:\r\n\r\n```\r\n> pyreverse -ASmy -o .puml my_package/my_module.py \r\nparsing my_package/my_module.py...\r\nFormat: \"puml\" not recognized. Use one of: bmp canon cmap cmapx cmapx_np dot dot_json eps fig gd gd2 gif gtk gv ico imap imap_np ismap jpe jpeg jpg json json0 mp pdf pic plain plain-ext png pov ps ps2 svg svgz tif tiff tk vml vmlz vrml wb",
+    "patch_summary": "Modified 3 files: pylint/pyreverse/dot_printer.py, pylint/pyreverse/main.py, pylint/pyreverse/utils.py (67 lines)",
+    "security_patterns_matched": {
+      "command_exec": [
+        "\\bsubprocess\\b on line 86: import subprocess",
+        "\\bsubprocess\\b on line 104: dot_output = subprocess.run("
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/pyreverse/dot_printer.py",
+      "pylint/pyreverse/main.py",
+      "pylint/pyreverse/utils.py"
+    ],
+    "patch_size_lines": 67
+  },
+  {
+    "instance_id": "pylint-dev__pylint-6528",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Pylint does not respect ignores in `--recursive=y` mode\n### Bug description\r\n\r\nPylint does not respect the `--ignore`, `--ignore-paths`, or `--ignore-patterns` setting when running in recursive mode. This contradicts the documentation and seriously compromises the usefulness of recursive mode.\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Command used\r\n\r\n```shell\r\n### .a/foo.py\r\n# import re\r\n\r\n### bar.py\r\n# import re\r\n\r\npylint --recursive=y .\r\npylint --recursive=y --ignore=.a .\r\npylint --recursiv",
+    "patch_summary": "Modified 2 files: pylint/lint/expand_modules.py, pylint/lint/pylinter.py (35 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 14: basename = os.path.basename(element)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "pylint/lint/expand_modules.py",
+      "pylint/lint/pylinter.py"
+    ],
+    "patch_size_lines": 35
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7080",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "`--recursive=y` ignores `ignore-paths`\n### Bug description\r\n\r\nWhen running recursively, it seems `ignore-paths` in my settings in pyproject.toml is completely ignored\r\n\r\n### Configuration\r\n\r\n```ini\r\n[tool.pylint.MASTER]\r\nignore-paths = [\r\n  # Auto generated\r\n  \"^src/gen/.*$\",\r\n]\r\n```\r\n\r\n\r\n### Command used\r\n\r\n```shell\r\npylint --recursive=y src/\r\n```\r\n\r\n\r\n### Pylint output\r\n\r\n```shell\r\n************* Module region_selection\r\nsrc\\region_selection.py:170:0: R0914: Too many local variables (17/15) (to",
+    "patch_summary": "Modified: pylint/lint/expand_modules.py (1 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 8: element = os.path.normpath(element)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "pylint/lint/expand_modules.py"
+    ],
+    "patch_size_lines": 1
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7114",
+    "repo": "pylint-dev/pylint",
+    "repo_tier": 2,
+    "problem_statement": "Linting fails if module contains module of the same name\n### Steps to reproduce\r\n\r\nGiven multiple files:\r\n```\r\n.\r\n`-- a/\r\n    |-- a.py\r\n    `-- b.py\r\n```\r\nWhich are all empty, running `pylint a` fails:\r\n\r\n```\r\n$ pylint a\r\n************* Module a\r\na/__init__.py:1:0: F0010: error while code parsing: Unable to load file a/__init__.py:\r\n[Errno 2] No such file or directory: 'a/__init__.py' (parse-error)\r\n$\r\n```\r\n\r\nHowever, if I rename `a.py`, `pylint a` succeeds:\r\n\r\n```\r\n$ mv a/a.py a/c.py\r\n$ pylint a",
+    "patch_summary": "Modified: pylint/lint/expand_modules.py (10 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 10: if os.path.isfile(something) or os.path.exists(",
+        "\\bos\\.path\\b on line 11: os.path.join(something, \"__init__.py\")"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "pylint/lint/expand_modules.py"
+    ],
+    "patch_size_lines": 10
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5205",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Invalid XML schema for <properties> tags in JUnit reports \nThe problem:\r\n\r\nJUnit breaks when it reads an XML generated by pytest if plugins make use of  `record-property`. This behavior happens with newer versions of  hypothesis (https://github.com/HypothesisWorks/hypothesis/issues/1935).\r\n\r\n```\r\n[xUnit] [ERROR] - The result file '/somewhere/tests/pytests.xml' for the metric 'JUnit' is not valid. The result file has been skipped.\r\n```\r\n\r\nIn fact, as already mentioned in https://github.com/pytest",
+    "patch_summary": "Modified: src/_pytest/junitxml.py (44 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 41: xml = getattr(request.config, \"_xml\", None)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/junitxml.py"
+    ],
+    "patch_size_lines": 44
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5787",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "exception serialization should include chained exceptions\ngiven some simple tests:\r\n```\r\ndef test_chained_exception_with_from():\r\n    try:\r\n        try:\r\n            raise ValueError(11)\r\n        except Exception as e1:\r\n            raise ValueError(12) from e1\r\n    except Exception as e2:\r\n        raise ValueError(13) from e2\r\n\r\n\r\ndef test_chained_exception_without_from():\r\n    try:\r\n        try:\r\n            raise ValueError(21)\r\n        except Exception:\r\n            raise ValueError(22)\r\n   ",
+    "patch_summary": "Modified: src/_pytest/reports.py (232 lines)",
+    "security_patterns_matched": {
+      "serialisation": [
+        "\\bserializ on line 126: This was originally the serialize_report() function from xdist (ca03269).",
+        "\\bserializ on line 129: serialization.",
+        "\\bserializ on line 132: def serialize_repr_entry(entry):",
+        "\\bserializ on line 139: def serialize_repr_traceback(reprtraceback):",
+        "\\bserializ on line 142: serialize_repr_entry(x) for x in reprtraceback.reprentries",
+        "\\bserializ on line 146: def serialize_repr_crash(reprcrash):",
+        "\\bserializ on line 149: def serialize_longrepr(rep):",
+        "\\bserializ on line 151: \"reprcrash\": serialize_repr_crash(rep.longrepr.reprcrash),",
+        "\\bserializ on line 152: \"reprtraceback\": serialize_repr_traceback(rep.longrepr.reprtraceback),",
+        "\\bserializ on line 160: serialize_repr_traceback(repr_traceback),",
+        "\\bserializ on line 161: serialize_repr_crash(repr_crash),",
+        "\\bserializ on line 174: d[\"longrepr\"] = serialize_longrepr(report)",
+        "\\bserializ on line 189: This was originally the serialize_report() function from xdist (ca03269).",
+        "\\bdeserializ on line 194: def deserialize_repr_entry(entry_data):",
+        "\\bdeserializ on line 221: def deserialize_repr_traceback(repr_traceback_dict):",
+        "\\bdeserializ on line 223: deserialize_repr_entry(x) for x in repr_traceback_dict[\"reprentries\"]",
+        "\\bdeserializ on line 227: def deserialize_repr_crash(repr_crash_dict):",
+        "\\bdeserializ on line 236: reprtraceback = deserialize_repr_traceback(",
+        "\\bdeserializ on line 239: reprcrash = deserialize_repr_crash(reportdict[\"longrepr\"][\"reprcrash\"])",
+        "\\bdeserializ on line 247: deserialize_repr_traceback(repr_traceback_data),",
+        "\\bdeserializ on line 248: deserialize_repr_crash(repr_crash_data),"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": true,
+    "patch_files": [
+      "src/_pytest/reports.py"
+    ],
+    "patch_size_lines": 232
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5980",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Provide an alternative to --result-log\nAfter discussion in https://github.com/pytest-dev/pytest/pull/4447#issuecomment-441132410, @RonnyPfannschmidt mentions he would like to provide a replacement to `--result-log` in the core before removing it (#3081).\r\n\r\nThis potentially is an easy contribution given that we have the `resultlog.py` plugin already which can be used as a starting point.\r\n\r\nI would like for us to discuss how that \"log file\" will look like in this issue. \r\n\r\n---\r\n\r\nI understand t",
+    "patch_summary": "Modified 4 files (103 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bopen\\s*\\( on line 91: self._file = log_path.open(\"w\", buffering=1, encoding=\"UTF-8\")"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/config/__init__.py",
+      "src/_pytest/hookspec.py",
+      "src/_pytest/report_log.py",
+      "src/_pytest/reports.py"
+    ],
+    "patch_size_lines": 103
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7046",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Expressions match against folder structure above pytest root\nSay I have a test file `/opt/dev/Asdf/pytest_collect/test_issue.py`\r\n\r\n```python\r\ndef test_fdsa():\r\n    pass\r\n\r\ndef test_asdf():\r\n    pass\r\n```\r\n\r\nIf I want to match only `test_fdsa`, this works as expected\r\n\r\n```bash\r\n/opt/dev/Asdf/pytest_collect $ pytest --collectonly -k fdsa\r\n================================================= test session starts ==================================================\r\nplatform darwin -- Python 3.7.2, pyte",
+    "patch_summary": "Modified 2 files: src/_pytest/mark/__init__.py, src/_pytest/python.py (5 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 22: self.name = os.path.basename(str(fspath.dirname))"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/mark/__init__.py",
+      "src/_pytest/python.py"
+    ],
+    "patch_size_lines": 5
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7352",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-of-jenkins/pytest-1681/.lock'\nSame issue as in #4181 .\r\nI think there are still some edge cases where this is not handled correctly. I am running a series of concurrent pytest processes and was able to reproduce the issue. Here is the stack trace:\r\n\r\n```\r\n============================= test session starts ==============================\r\nplatform linux -- Python 3.7.2, pytest-4.6.3, py-1.8.0, pluggy-0.12.0 -- /usr/local/bin/.pyen",
+    "patch_summary": "Modified: src/_pytest/pathlib.py (13 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bpermission on line 19: # - PermissionDenied, like the file permissions have changed since the lock crea"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/pathlib.py"
+    ],
+    "patch_size_lines": 13
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7373",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Incorrect caching of skipif/xfail string condition evaluation\nVersion: pytest 5.4.3, current master\r\n\r\npytest caches the evaluation of the string in e.g. `@pytest.mark.skipif(\"sys.platform == 'win32'\")`. The caching key is only the string itself (see `cached_eval` in `_pytest/mark/evaluate.py`). However, the evaluation also depends on the item's globals, so the caching can lead to incorrect results. Example:\r\n\r\n```py\r\n# test_module_1.py\r\nimport pytest\r\n\r\nskip = True\r\n\r\n@pytest.mark.skipif(\"skip\"",
+    "patch_summary": "Modified: src/_pytest/mark/evaluate.py (21 lines)",
+    "security_patterns_matched": {
+      "command_exec": [
+        "\\beval\\s*\\( on line 30: return eval(exprcode, d)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/mark/evaluate.py"
+    ],
+    "patch_size_lines": 21
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7468",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "--log-file should create subdirectories\nIf you provide a path with a subdirectory, which does not exist, it crashes with.\r\nFor example execute `pytest --log-file=subtest/test.log` produces something like this:\r\n`INTERNALERROR> FileNotFoundError: [Errno 2] No such file or directory: '/tmp/test/subtest/test.log' `\r\n\r\nMaybe someone want to add something like this\r\n```\r\ndirname = os.path.dirname(os.path.abspath(logfile))\r\nif not os.path.isdir(dirname):\r\n    os.makedirs(dirname)\r\n```\r\nHowever, there ",
+    "patch_summary": "Modified: src/_pytest/logging.py (6 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 9: directory = os.path.dirname(os.path.abspath(log_file))",
+        "\\bos\\.path\\b on line 10: if not os.path.isdir(directory):",
+        "\\bos\\.makedirs\\b on line 11: os.makedirs(directory)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/logging.py"
+    ],
+    "patch_size_lines": 6
+  },
+  {
+    "instance_id": "pytest-dev__pytest-8033",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Class cleanups in Python 3.8+ are not called\nhttps://docs.python.org/3/library/unittest.html#unittest.TestCase.addClassCleanup\r\n\r\nDid not see `doClassCleanups` mentioned anywhere in this repo, which is the method that should be called. See https://github.com/python/cpython/blob/0f221d09cad46bee38d1b7a7822772df66c53028/Lib/unittest/suite.py#L175\r\n\r\nRepo:\r\n```\r\nimport unittest\r\n\r\ndef cleanup():\r\n    assert False\r\n\r\nclass MyTest(unittest.TestCase):\r\n    @classmethod\r\n    def setUpClass(cls):\r\n     ",
+    "patch_summary": "Modified: src/_pytest/unittest.py (58 lines)",
+    "security_patterns_matched": {
+      "user_input": [
+        "\\brequest\\. on line 66: setup(self, request.function)",
+        "\\brequest\\. on line 83: teardown(self, request.function)"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/unittest.py"
+    ],
+    "patch_size_lines": 58
+  },
+  {
+    "instance_id": "pytest-dev__pytest-8516",
+    "repo": "pytest-dev/pytest",
+    "repo_tier": 2,
+    "problem_statement": "Minor temporary directory security issue in pytest versions before 6.2.3\nA minor temporary directory security issue was found in pytest versions before 6.2.3. This issue is fixed in pytest 6.2.3.\r\n\r\npytest used to create directories under ``/tmp`` with world-readable\r\npermissions. This means that any user in the system was able to read\r\ninformation written by tests in temporary directories (such as those created by\r\nthe ``tmp_path``/``tmpdir`` fixture). Now the directories are created with\r\npriv",
+    "patch_summary": "Modified 3 files: src/_pytest/pathlib.py, src/_pytest/pytester.py, src/_pytest/tmpdir.py (70 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bpermission on line 134: # rootdir's permissions. Historically 0o755 was used, so we can't"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "src/_pytest/pathlib.py",
+      "src/_pytest/pytester.py",
+      "src/_pytest/tmpdir.py"
+    ],
+    "patch_size_lines": 70
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13641",
+    "repo": "scikit-learn/scikit-learn",
+    "repo_tier": 2,
+    "problem_statement": "CountVectorizer with custom analyzer ignores input argument\nExample:\n\n``` py\ncv = CountVectorizer(analyzer=lambda x: x.split(), input='filename')\ncv.fit(['hello world']).vocabulary_\n```\n\nSame for `input=\"file\"`. Not sure if this should be fixed or just documented; I don't like changing the behavior of the vectorizers yet again...\n\n",
+    "patch_summary": "Modified: sklearn/feature_extraction/text.py (42 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\btempfile\\b on line 20: import tempfile",
+        "\\btempfile\\b on line 21: with tempfile.NamedTemporaryFile() as f:"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "sklearn/feature_extraction/text.py"
+    ],
+    "patch_size_lines": 42
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14067",
+    "repo": "scikit-learn/scikit-learn",
+    "repo_tier": 2,
+    "problem_statement": "ARD Regressor accuracy degrades when upgrading Scipy 1.2.1 -> 1.3.0\nHi, \r\nbit of a tricky one, I'm hoping someone will have some time and/or suggestions for further investigation!\r\n\r\nThere seems to be an often-occurring worsening of performance (i.e. accuracy, although run-time increases too!) from the ARD regressor when upgrading from Scipy 1.2.1 -> 1.3.0. \r\n\r\n## Description\r\nOn a very simple dataset (see code snippets below) where a near-perfect fit should be achievable, typical error seems to",
+    "patch_summary": "Modified 3 files: sklearn/externals/_scipy_linalg.py, sklearn/linear_model/bayes.py, sklearn/utils/fixes.py (127 lines)",
+    "security_patterns_matched": {
+      "auth": [
+        "\\bpermission on line 25: from this software without specific prior written permission."
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "sklearn/externals/_scipy_linalg.py",
+      "sklearn/linear_model/bayes.py",
+      "sklearn/utils/fixes.py"
+    ],
+    "patch_size_lines": 127
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-7351",
+    "repo": "sphinx-doc/sphinx",
+    "repo_tier": 3,
+    "problem_statement": "Files with same name but different extensions leads to unexpected behaviour\n**Describe the bug**\r\n\r\nIf there are multiple files with the same name but different file extensions;\r\nsphinx will silently choose only one to parse:\r\n\r\n**To Reproduce**\r\nSteps to reproduce the behavior:\r\n\r\nGiven I have an extension installed to parse  `md`\r\n\r\nwith:\r\n```\r\nindex.rst\r\na.md\r\na.rst\r\n```\r\n\r\nindex.rst:\r\n\r\n```restructuredtext\r\n.. toctree::\r\n    a.md\r\n```\r\n\r\nThis will actually include `a.rst` in the document, no",
+    "patch_summary": "Modified 2 files: sphinx/project.py, sphinx/util/logging.py (44 lines)",
+    "security_patterns_matched": {
+      "file_io": [
+        "\\bos\\.path\\b on line 18: pattern = os.path.join(self.srcdir, docname) + '.*'",
+        "\\bos\\.path\\b on line 23: elif os.access(os.path.join(self.srcdir, filename), os.R_OK):"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "sphinx/project.py",
+      "sphinx/util/logging.py"
+    ],
+    "patch_size_lines": 44
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-9234",
+    "repo": "sphinx-doc/sphinx",
+    "repo_tier": 3,
+    "problem_statement": "Link checker should be able to prohibit unknown redirects\n**Is your feature request related to a problem? Please describe.**\r\nA lot of links become stale or move. Good websites will provide redirects to the correct new location or return an HTTP error code. Bad websites will redirect to an unrelated page or the root of the website.\r\n\r\nPreventing all redirects does not allow links to URLs like https://www.sphinx-doc.org/ which redirects to https://www.sphinx-doc.org/en/master/. It needs to be pos",
+    "patch_summary": "Modified: sphinx/builders/linkcheck.py (38 lines)",
+    "security_patterns_matched": {
+      "url_routing": [
+        "\\bredirect\\b on line 11: logger.warning('redirect  ' + result.uri + ' - ' + text + ' to ' +",
+        "\\bredirect\\b on line 14: logger.info(color('redirect  ') + result.uri +"
+      ]
+    },
+    "security_relevance_score": 1,
+    "in_verified_subset": false,
+    "patch_files": [
+      "sphinx/builders/linkcheck.py"
+    ],
+    "patch_size_lines": 38
+  }
+]

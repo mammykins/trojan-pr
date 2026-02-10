@@ -20,11 +20,21 @@ This directory contains everything needed to execute the initial stages of the S
 | `validation/ground_truth.json` | Holdout criteria the pipeline must satisfy (read-only) |
 | `validation/validate.py` | Validation runner — agent runs this at each checkpoint (read-only) |
 
+## Stage Status
+
+| Stage | Status | Output |
+|-------|--------|--------|
+| Stage 1 (Automated Sift) | ✅ Complete | 148 candidates from 2,294 tasks |
+| Stage 2 (LLM Triage) | ⏳ Pending | — |
+| Pilot | ⏳ Pending | — |
+
+For detailed methods on the Stage 1 filtering pipeline, see [`stage1/METHODS.md`](stage1/METHODS.md).
+
 ## Checkpoints
 
 The agent will pause at three checkpoints for human review:
 
-- **CP1** (after Stage 1): Review the candidate task list
+- **CP1** (after Stage 1): Review the candidate task list ✅
 - **CP2** (after Stage 2): Review triage scores and select pilot tasks
 - **CP3** (after Pilot): Review pilot results and decide go/no-go for full build
 

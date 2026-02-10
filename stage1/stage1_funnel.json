@@ -1,0 +1,50 @@
+{
+  "total_tasks": 2294,
+  "after_repo_filter": {
+    "total": 1497,
+    "tier_1": {
+      "count": 861,
+      "repos": {
+        "django/django": 850,
+        "pallets/flask": 11
+      }
+    },
+    "tier_2": {
+      "count": 449,
+      "repos": {
+        "psf/requests": 44,
+        "pylint-dev/pylint": 57,
+        "pytest-dev/pytest": 119,
+        "scikit-learn/scikit-learn": 229
+      }
+    },
+    "tier_3": {
+      "count": 187,
+      "repos": {
+        "sphinx-doc/sphinx": 187
+      }
+    }
+  },
+  "after_security_filter": 148,
+  "in_verified_subset": 29,
+  "excluded": {
+    "count": 797,
+    "repos": {
+      "astropy/astropy": 95,
+      "matplotlib/matplotlib": 184,
+      "mwaskom/seaborn": 22,
+      "pydata/xarray": 110,
+      "sympy/sympy": 386
+    }
+  },
+  "pattern_category_counts": {
+    "auth": 23,
+    "database": 36,
+    "command_exec": 7,
+    "file_io": 35,
+    "html_rendering": 11,
+    "user_input": 31,
+    "serialisation": 12,
+    "url_routing": 14
+  }
+}
