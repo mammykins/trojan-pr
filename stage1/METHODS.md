@@ -13,46 +13,42 @@ This document describes the methods used to filter the SWE-bench dataset to iden
 3. Refinement (v2) — tightened patterns based on findings
 4. Validation — confirmation of improved quality
 
-graph TD
-    %% Definitions for style
-    classDef input fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#01579b;
-    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#4a148c;
-    classDef review fill:#fff9c4,stroke:#f57f17,stroke-width:2px,stroke-dasharray: 5 5,color:#f57f17;
-    classDef output fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#1b5e20;
-
-    %% Nodes
-    InputData[("Data Source Input\n(SWE-bench: ~2,300 tasks)\n(Includes Verified Subset)")]:::input
-    
-    RepoFilter["1. Repository Filtering\n(Classify into Tiers based on security criticality)\n(Exclude Tier: pure maths/visualisation)"]:::process
-    
-    PatternV1["2. Initial Pattern Detection (v1)\n(Broad regex matching across 8 security categories)\n(Applied ONLY to 'added lines +' in diffs)"]:::process
-    
-    QualityReview{"3. Quality Review (v1 Assessment)\n(Systematic False Positive Analysis)\n(Finding: High FP rate due to generic matching like .get())"}:::review
-    
-    Refinement["4. Pattern Refinement (v2)\n(Tighten regex patterns, e.g., require 'request.' prefix)\n(Introduce EXCLUDE_LINE_PATTERNS)"]:::process
-    
-    PatternV2["5. Refined Pattern Detection (v2 Re-run)\n(Apply tightened patterns to repo-filtered data)"]:::process
-    
-    Validation["6. Final Validation\n(Confirm elimination of v1 FPs)\n(Verify high security relevance of candidates)"]:::process
-    
-    OutputFiles[("Final Output\n(stage1_candidates.json: 148 candidates)\n(stage1_funnel.json: Metrics)")]:::output
-
-    %% Flow Connections
-    InputData --> RepoFilter
-    RepoFilter -- "Filtered to 1,497 tasks" --> PatternV1
-    PatternV1 -- "Initial result: 736 candidates" --> QualityReview
-    QualityReview -- "Findings drive adjustments" --> Refinement
-    Refinement -- "Updated Matching Strategy" --> PatternV2
-    PatternV2 -- "Refined result: 148 candidates (80% reduction)" --> Validation
-    Validation --> OutputFiles
-
-    %% Subgraph to show the iterative loop context visually
-    subgraph "Iterative Refinement Cycle"
-        PatternV1
-        QualityReview
-        Refinement
-        PatternV2
+```mermaid
+flowchart TD
+    subgraph Input
+        A["SWE-bench ~2300 tasks"]
     end
+
+    subgraph Processing
+        B["1. Repository Filter"]
+        C["2. Pattern Detection v1"]
+        D["3. Quality Review"]
+        E["4. Pattern Refinement"]
+        F["5. Pattern Detection v2"]
+        G["6. Validation"]
+    end
+
+    subgraph Output
+        H["148 candidates"]
+    end
+
+    A --> B
+    B -->|1497 tasks| C
+    C -->|736 candidates| D
+    D -->|High FP rate found| E
+    E --> F
+    F -->|148 candidates| G
+    G --> H
+
+    style A fill:#e1f5fe,stroke:#01579b
+    style B fill:#f3e5f5,stroke:#4a148c
+    style C fill:#f3e5f5,stroke:#4a148c
+    style D fill:#fff9c4,stroke:#f57f17
+    style E fill:#f3e5f5,stroke:#4a148c
+    style F fill:#f3e5f5,stroke:#4a148c
+    style G fill:#f3e5f5,stroke:#4a148c
+    style H fill:#e8f5e9,stroke:#1b5e20
+```
 
 ## 2. Data Source
 
